@@ -359,7 +359,7 @@ class DatasetImportController(p.toolkit.BaseController):
             resource_df['resource_disaggregate_other'] = resource_df['resource_disaggregate'].isin(disaggregate_choices)
             resource_df['resource_disaggregate_other'] = resource_df.resource_disaggregate_other.astype(str)
             resource_df['resource_disaggregate_other'] = np.where(resource_df['resource_disaggregate_other'] == 'True', 'True', resource_df['resource_disaggregate'])
-            resource_df['resource_disaggregate'] = np.where(resource_df['resource_disaggregate_other'] == 'True', resource_df['resource_disaggregate'], u'อื่นๆ')
+            resource_df['resource_disaggregate'] = np.where(resource_df['resource_disaggregate_other'] == 'True', resource_df['resource_disaggregate'], 'อื่นๆ')
             resource_df['resource_disaggregate_other'].replace('True', '', regex=True, inplace=True)
 
             resource_df["resource_data_release_calendar"] = pd.to_datetime((pd.to_numeric(resource_df["resource_data_release_calendar"].str.slice(stop=4), errors='coerce').astype('Int64')-543).astype(str)+resource_df["resource_data_release_calendar"].str.slice(start=4), errors='coerce').astype(str)

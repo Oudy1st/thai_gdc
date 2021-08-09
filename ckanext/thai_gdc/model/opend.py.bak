@@ -14,7 +14,7 @@ class OpendModel:
 
         data = []
         for rowproxy in resultproxy:
-            my_dict = {column: value for column, value in list(rowproxy.items())}
+            my_dict = {column: value for column, value in rowproxy.items()}
             data.append(my_dict)
 
         return data

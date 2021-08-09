@@ -32,11 +32,11 @@ class UserManageController(plugins.toolkit.BaseController):
                                 request.GET, ignore_keys=CACHE_PARAMETERS))))
                 
                 context = {
-                    'model': model,
-                    'session': model.Session,
-                    'user': g.user,
-                    'auth_user_obj': g.userobj,
-                    'for_view': True
+                    u'model': model,
+                    u'session': model.Session,
+                    u'user': g.user,
+                    u'auth_user_obj': g.userobj,
+                    u'for_view': True
                 }
                 check_access('user_update', context, {})
                 user_dict = plugins.toolkit.get_action('user_show')(None, {'id':data['id']})
