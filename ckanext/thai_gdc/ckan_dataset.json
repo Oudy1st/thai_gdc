@@ -389,6 +389,25 @@
         "required": true
       },
       {
+        "field_name": "data_source_scope",
+        "label": {
+          "en": "Data Source",
+          "th": "ขอบเขตแหล่งแหล่งที่มา"
+        },
+        "choices": [
+          {
+            "value": "ภายใน",
+            "label": "ภายใน"
+          },
+          {
+            "value": "ภายนอก",
+            "label": "ภายนอก"
+          },
+        "form_placeholder": "แหล่งที่มาภายในหน่วยงานหรือภายนอกหน่วยงาน",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลประเภทอื่นๆ"],
+        "required": true
+      },
+      {
         "field_name": "data_format",
         "label": {
           "en": "Data Format",
