@@ -391,7 +391,7 @@
       {
         "field_name": "data_source_scope",
         "label": {
-          "en": "Data Source",
+          "en": "Data Source Scope",
           "th": "ขอบเขตแหล่งแหล่งที่มา"
         },
         "choices": [
@@ -404,7 +404,9 @@
             "label": "ภายนอก"
           }
         ],
-        "form_placeholder": "แหล่งที่มาภายในหน่วยงานหรือภายนอกหน่วยงาน",
+        "form_snippet": "license_id.html",
+        "display_snippet": "select.html",
+        "validators": "scheming_required",
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลประเภทอื่นๆ"],
         "required": true
       },
