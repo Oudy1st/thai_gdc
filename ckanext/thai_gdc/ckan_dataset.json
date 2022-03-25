@@ -1132,6 +1132,7 @@
           "label":"อื่นๆ"
           }
           ],
+        "form_snippet": "license_id.html",
         "display_snippet": "select.html",
         "required": true,
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
