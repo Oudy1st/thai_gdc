@@ -205,8 +205,8 @@
           "label":"ไม่มีการปรับปรุงหลังจากการจัดเก็บข้อมูล"
           }, 
           {
-          "value":"อื่น",
-          "label":"อื่น ๆ ระบุ..."
+          "value":"อื่นๆ",
+          "label":"อื่นๆ"
           }, 
           {
           "value":"ไม่ทราบ",
@@ -222,7 +222,8 @@
       },
       {
         "field_name": "update_frequency_unit_other",
-        "form_snippet": "update_frequency_unit_other.html"
+        "form_snippet": "update_frequency_unit_other.html",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "update_frequency_interval",
@@ -290,7 +291,7 @@
           }, 
           {
           "value":"อื่นๆ",
-          "label":"อื่นๆ ระบุ.."
+          "label":"อื่นๆ"
           }, 
           {
           "value":"ไม่ทราบ",
@@ -1146,7 +1147,8 @@
       },
       {
         "field_name": "data_format_other",
-        "form_snippet": "data_format_other.html"
+        "form_snippet": "data_format_other.html",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "data_category",
@@ -1313,8 +1315,8 @@
         "label":"ไม่ทราบ"
         }, 
         {
-        "value":"อื่น ๆ ระบุ .........",
-        "label":"อื่น ๆ ระบุ ........."
+        "value":"อื่นๆ",
+        "label":"อื่นๆ"
         }
         ],
         "form_snippet": "data_language.html",
