@@ -1,5 +1,18 @@
 {% import 'macros/form.html' as form %}
 <script type="text/javascript">
+    function sSelect_data_format(){
+		index = document.getElementById('ield-data_format').value;
+		if(index == 'อื่นๆ'){
+			document.getElementById('field-data_format_other').style.display='';
+            document.getElementById('field-data_format_other').focus();
+            document.getElementById('field-data_format_other').disabled = false;
+		} else {
+            document.getElementById('field-data_format_other').value='';
+            document.getElementById('field-data_format_other').style.display='none';
+            document.getElementById('field-data_format_other').disabled = true;
+        }
+	}
+
 	function sCheck_data_format(cb){
 		if(cb.value=="อื่นๆ" && cb.checked==true){
             document.getElementById('field-data_format_other').value = '';
@@ -48,7 +61,7 @@ fieldset.checkboxes label input {
     error=errors[field.field_name],
     classes=['control-medium'],
     is_required=h.scheming_field_required(field),
-    attrs = {'class' : "form-control", 'onchange' : "sSelect_license_id();"}
+    attrs = {'class' : "form-control", 'onchange' : "sSelect_data_format();"}
     )
 %}
 {% endcall %}
