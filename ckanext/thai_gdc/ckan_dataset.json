@@ -36,8 +36,8 @@
           "label":"ข้อมูลหลากหลายประเภท"
           }
           ],
-          "form_snippet": "update_frequency_unit.html",
-          "display_snippet": "select.html",
+        "form_snippet": "data_type.html",
+        "display_snippet": "select.html",
         "validators": "scheming_required",
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"],
         "required": true
