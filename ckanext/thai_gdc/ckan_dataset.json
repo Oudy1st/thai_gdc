@@ -38,7 +38,8 @@
           "label":"ข้อมูลหลากหลายประเภท"
           }
         ],
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "title",
@@ -48,19 +49,21 @@
         },
         "preset": "title",
         "form_placeholder": "eg. A descriptive title",
-        
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "name",
         "label": "URL",
         "preset": "dataset_slug",
-        "form_placeholder": "eg. my-dataset"
+        "form_placeholder": "eg. my-dataset",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "owner",
         "label": "Organization",
-        "preset": "dataset_organization"
+        "preset": "dataset_organization",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "contact_person",
@@ -73,7 +76,8 @@
           "th": "ชื่อหน่วยงานหรือกลุ่มงาน"
         },
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "contact_email",
@@ -85,7 +89,8 @@
         "display_snippet": "email.html",
         
         "validators": "not_empty email_validator unicode",
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "tag_string",
@@ -96,7 +101,8 @@
         "preset": "tag_string_autocomplete",
         "form_placeholder": "eg. economy, mental health, government",
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "notes",
@@ -104,7 +110,8 @@
         "form_snippet": "markdown.html",
         "form_placeholder": "eg. Some useful notes about the data",
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "objective",
@@ -139,7 +146,8 @@
         "validators": "scheming_multiple_choice",
         "output_validators": "scheming_multiple_choice_output",
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "objective_other",
@@ -209,7 +217,8 @@
         "display_snippet": "select.html",
         "validators": "scheming_required",
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "update_frequency_unit_other",
@@ -221,7 +230,8 @@
           "en": "Update Frequency Interval",
           "th": "ค่าความถี่ของการปรับปรุงข้อมูล (ความถี่น้อยที่สุด)"
         },
-        "form_placeholder": "เลขจำนวนที่ประกอบกับหน่วยความถี่ (ครั้ง/หน่วยความถี่)"
+        "form_placeholder": "เลขจำนวนที่ประกอบกับหน่วยความถี่ (ครั้ง/หน่วยความถี่)",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "geo_coverage",
@@ -291,11 +301,13 @@
         "display_snippet": "select.html",
         "validators": "scheming_required",
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "geo_coverage_other",
-        "form_snippet": "geo_coverage_other.html"
+        "form_snippet": "geo_coverage_other.html",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "data_source",
@@ -1022,7 +1034,8 @@
         "validators": "scheming_multiple_choice",
         "output_validators": "scheming_multiple_choice_output",
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "data_source_scope",
@@ -1048,7 +1061,8 @@
         "display_snippet": "select.html",
         "validators": "scheming_required",
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "data_format",
@@ -1127,7 +1141,8 @@
         "validators": "scheming_multiple_choice",
         "output_validators": "scheming_multiple_choice_output",
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "data_format_other",
@@ -1191,7 +1206,8 @@
           }
           ],
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "license_id",
@@ -1230,11 +1246,13 @@
         "display_snippet": "select.html",
         "validators": "scheming_required",
         
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "license_id_other",
-        "form_snippet": "license_id_other.html"
+        "form_snippet": "license_id_other.html",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "accessible_condition",
@@ -1243,7 +1261,8 @@
           "th": "เงื่อนไขในการเข้าถึงข้อมูล"
         },
         "form_snippet": "markdown.html",
-        "form_placeholder": "เงื่อนไขเพื่อให้สามารถเข้าถึงหรือใช้ข้อมูลได้"
+        "form_placeholder": "เงื่อนไขเพื่อให้สามารถเข้าถึงหรือใช้ข้อมูลได้",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "created_date",
@@ -1252,7 +1271,7 @@
             "th": "วันที่เริ่มต้นสร้าง"
           },
         "preset": "date",
-        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "last_updated_date",
@@ -1260,7 +1279,8 @@
             "en": "Last updated date",
             "th": "วันที่ปรับปรุงข้อมูลล่าสุด"
           },
-        "preset": "date"
+        "preset": "date",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "url",
@@ -1270,7 +1290,8 @@
         },
         "form_placeholder": "URL ที่สามารถเข้าถึงรายละเอียดของชุดข้อมูลได้",
         "display_property": "foaf:homepage",
-        "display_snippet": "link.html"
+        "display_snippet": "link.html",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "data_language",
@@ -1299,11 +1320,13 @@
         "form_snippet": "data_language.html",
         "display_snippet": "multiple_choice.html",
         "validators": "scheming_multiple_choice",
-        "output_validators": "scheming_multiple_choice_output"
+        "output_validators": "scheming_multiple_choice_output",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "data_language_other",
-        "form_snippet": "data_language_other.html"
+        "form_snippet": "data_language_other.html",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "high_value_dataset",
@@ -1328,7 +1351,8 @@
           }
         ],
         "form_snippet": "select.html",
-        "display_snippet": "select.html"
+        "display_snippet": "select.html",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "master_data_list",
@@ -1369,7 +1393,8 @@
         "form_snippet": "data_language.html",
         "display_snippet": "multiple_choice.html",
         "validators": "scheming_multiple_choice",
-        "output_validators": "scheming_multiple_choice_output"
+        "output_validators": "scheming_multiple_choice_output",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "Platform_list",
@@ -1402,7 +1427,8 @@
         "form_snippet": "data_language.html",
         "display_snippet": "multiple_choice.html",
         "validators": "scheming_multiple_choice",
-        "output_validators": "scheming_multiple_choice_output"
+        "output_validators": "scheming_multiple_choice_output",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "data_steward",
@@ -1412,15 +1438,14 @@
         },
         "form_placeholder": {
           "th": "ชื่อบุคคลที่บริกรข้อมูลเชิงธุรกิจ"
-        }
+        },
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "data_quality",
-        "label": {
-          "en": "data quality",
-          "th": "คุณภาพข้อมูล"
-        },
-        "form_placeholder": "URL เชื่อมโยงไปรายงานคุณภาพข้อมูล"
+        "label": "URL เชื่อมโยงไปรายงานคุณภาพข้อมูล",
+        "form_placeholder": "URL เชื่อมโยงไปรายงานคุณภาพข้อมูล",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "certified_date",
@@ -1428,26 +1453,30 @@
             "en": "certified date",
             "th": "วันที่รับรองคุณภาพข้อมูล"
           },
-        "preset": "date"
+        "preset": "date",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       }
     ],
     "resource_fields": [
       {
         "field_name": "url",
         "label": "URL",
-        "preset": "resource_url_upload"
+        "preset": "resource_url_upload",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "name",
         "label": "Name",
         "form_placeholder": "eg. January 2011 Gold Prices",
-        "required": true
+        "required": true,
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "description",
         "label": "Description",
         "form_snippet": "markdown.html",
-        "form_placeholder": "Some useful notes about the data"
+        "form_placeholder": "Some useful notes about the data",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "resource_accessible_condition",
@@ -1456,7 +1485,8 @@
           "th": "เงื่อนไขในการเข้าถึงข้อมูล"
         },
         "form_snippet": "markdown.html",
-        "form_placeholder": "เงื่อนไขเพื่อให้สามารถเข้าถึงหรือใช้ข้อมูลได้"
+        "form_placeholder": "เงื่อนไขเพื่อให้สามารถเข้าถึงหรือใช้ข้อมูลได้",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "resource_created_date",
@@ -1464,7 +1494,8 @@
             "en": "Created date",
             "th": "วันที่เริ่มต้นสร้าง"
           },
-        "preset": "date"
+        "preset": "date",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "resource_last_updated_date",
@@ -1472,12 +1503,14 @@
             "en": "Last updated date",
             "th": "วันที่ปรับปรุงข้อมูลล่าสุด"
           },
-        "preset": "date"
+        "preset": "date",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       },
       {
         "field_name": "format",
         "label": "Format",
-        "preset": "resource_format_autocomplete"
+        "preset": "resource_format_autocomplete",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก"]
       }
     ]
   }
