@@ -80,11 +80,6 @@ class DatasetImportController(p.toolkit.BaseController):
             record_df["title"] = record_df["title"].str.lower()
             record_df["title"].replace('\s', '-', regex=True, inplace=True)
 
-            if data_dict['template_org'] != 'all':
-                record_df = record_df.loc[record_df['owner'] == data_dict['template_org']]
-                record_df.reset_index(drop=True, inplace=True)
-            record_df["owner"] = data_dict['owner']
-
             record_df['tag_string'] = record_df.tag_string.astype(str)
             record_df['tag_string'] = record_df['tag_string'].str.split(',').apply(lambda x: [e.strip() for e in x]).tolist()
 
