@@ -69,6 +69,8 @@ class DatasetImportController(p.toolkit.BaseController):
 
     
     def _oic_type_process(self, data_dict):
+        
+        log.info("เริ่มทำงาน")
         try:
             record_df = pd.read_excel(data_dict['filename'], header=[2], sheet_name='OIC_Meta', dtype=str)
 
@@ -166,7 +168,36 @@ class DatasetImportController(p.toolkit.BaseController):
                 portal.action.activity_create(**activity_dict)
                 log.info(log_str)
 
+        try:
+            resource_df = pd.read_excel(data_dict['filename'], header=[3], sheet_name='Temp3_Resource_Other', dtype=str)
+            resource_df.drop(0, inplace=True)
+            resource_df.columns = ['dataset_name','resource_name','resource_url','description','resource_accessible_condition','resource_last_updated_date','format','resource_created_date','resource_data_collect']
+            resource_df = resource_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+            resource_df.replace(np.nan, '', regex=True, inplace=True)
+        except:
+            resource_df = pd.DataFrame(columns=['dataset_name','resource_name','resource_url','description','resource_accessible_condition','resource_last_updated_date','format','resource_created_date','resource_data_collect'])
+            resource_df = resource_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+            resource_df.replace(np.nan, '', regex=True, inplace=True)
 
+        try:
+            final_df = pd.merge(other_df,resource_df,how='left',left_on='dataset_name',right_on='dataset_name')
+            final_df.replace(np.nan, '', regex=True, inplace=True)
+            resource_df = final_df[(final_df['resource_url'] != '') & (final_df['success'] == '1')]
+            resource_df = resource_df[['name','success','resource_name','resource_url','description','resource_accessible_condition','resource_last_updated_date','format','resource_created_date','resource_data_collect']]
+            resource_df.columns = ['package_id','success','name','url','description','resource_accessible_condition','resource_last_updated_date','format','resource_created_date','resource_data_collect']
+            resource_df["resource_created_date"] = pd.to_datetime((pd.to_numeric(resource_df["resource_created_date"].str.slice(stop=4), errors='coerce').astype('Int64')-543).astype(str)+resource_df["resource_created_date"].str.slice(start=4), errors='coerce').astype(str)
+            resource_df["resource_last_updated_date"] = pd.to_datetime((pd.to_numeric(resource_df["resource_last_updated_date"].str.slice(stop=4), errors='coerce').astype('Int64')-543).astype(str)+resource_df["resource_last_updated_date"].str.slice(start=4), errors='coerce').astype(str)
+            resource_df['created'] = datetime.datetime.utcnow().isoformat()
+            resource_df['last_modified'] = datetime.datetime.utcnow().isoformat()
+            resource_df.replace('NaT', '', regex=True, inplace=True)
+            resource_dict_list = resource_df.to_dict('records')
+
+            for resource_dict in resource_dict_list:
+                res_meta = resource_dict
+                resource = portal.action.resource_create(**res_meta)
+                log.info('resource_create: '+datetime.datetime.now().isoformat()+'-- '+str(resource)+'\n')
+        except Exception as err:
+            log.info(err)
 
     def _record_type_process(self, data_dict):
         try:
@@ -1016,7 +1047,7 @@ class DatasetImportController(p.toolkit.BaseController):
 
                 
                 record_df = pd.read_excel(filename, header=[2], sheet_name='OIC_Meta', dtype=str)
-                row_count += (len(record_df.index)-1)
+                row_count += (len(record_df.index))
 
                 toolkit.get_action('dataset_bulk_import')(context, data_dict)
 
