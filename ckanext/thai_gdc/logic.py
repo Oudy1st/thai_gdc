@@ -112,15 +112,17 @@ def dataset_bulk_import(context, data_dict):
     queue = DEFAULT_QUEUE_NAME
     dataset_import = DatasetImportController()
     
+    toolkit.enqueue_job(dataset_import._oic_type_process, [data_dict], title=u'import record package import_id:{}'.format(import_uuid), queue=queue)
+
     toolkit.enqueue_job(dataset_import._record_type_process, [data_dict], title=u'import record package import_id:{}'.format(import_uuid), queue=queue)
                 
-    toolkit.enqueue_job(dataset_import._stat_type_process, [data_dict], title=u'import stat package import_id:{}'.format(import_uuid), queue=queue)
+    # toolkit.enqueue_job(dataset_import._stat_type_process, [data_dict], title=u'import stat package import_id:{}'.format(import_uuid), queue=queue)
 
-    toolkit.enqueue_job(dataset_import._gis_type_process, [data_dict], title=u'import gis package import_id:{}'.format(import_uuid), queue=queue)
+    # toolkit.enqueue_job(dataset_import._gis_type_process, [data_dict], title=u'import gis package import_id:{}'.format(import_uuid), queue=queue)
 
-    toolkit.enqueue_job(dataset_import._multi_type_process, [data_dict], title=u'import multi package import_id:{}'.format(import_uuid), queue=queue)
+    # toolkit.enqueue_job(dataset_import._multi_type_process, [data_dict], title=u'import multi package import_id:{}'.format(import_uuid), queue=queue)
 
-    toolkit.enqueue_job(dataset_import._other_type_process, [data_dict], title=u'import other package import_id:{}'.format(import_uuid), queue=queue)
+    # toolkit.enqueue_job(dataset_import._other_type_process, [data_dict], title=u'import other package import_id:{}'.format(import_uuid), queue=queue)
 
     toolkit.enqueue_job(dataset_import._finished_process, [data_dict], title=u'import finished import_id:{}'.format(import_uuid), queue=queue)
     

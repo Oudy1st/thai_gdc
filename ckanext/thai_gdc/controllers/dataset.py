@@ -201,8 +201,7 @@ class DatasetImportController(p.toolkit.BaseController):
 
     def _record_type_process(self, data_dict):
         try:
-            record_df = pd.read_excel(data_dict['filename'], header=[3], sheet_name='OIC_Meta', dtype=str)
-            record_df.drop(0, inplace=True)
+            record_df = pd.read_excel(data_dict['filename'], header=[2], sheet_name='OIC_Meta', dtype=str)
             record_df["data_type"] = 'ข้อมูลระเบียน'
 
             record_df.columns = ['name','d_type','title','owner_org','maintainer','maintainer_email','tag_string','notes','objective','update_frequency_unit','update_frequency_interval','geo_coverage','data_source','data_format','data_category','license_id','accessible_condition','created_date','last_updated_date','url','data_support','data_collect','data_language','high_value_dataset','reference_data','data_type']
