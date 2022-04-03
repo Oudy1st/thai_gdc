@@ -72,7 +72,7 @@ class DatasetImportController(p.toolkit.BaseController):
         try:
             record_df = pd.read_excel(data_dict['filename'], header=[2], sheet_name='OIC_Meta', dtype=str)
 
-            record_df.columns = ['data_type', 'title', 'owner', 'contact_person', 'contact_email', 'tag_string', 'notes', 'objective', 'update_frequency_unit', 'update_frequency_interval', 'geo_coverage', 'data_source', 'data_source_scope', 'data_format', 'data_category', 'data_classification', 'license_id', 'accessible_condition', 'created_date', 'last_updated_date', 'url', 'data_language', 'high_value_dataset', 'master_data_list', 'Platform_list', 'data_steward', 'data_quality', 'certified_date']
+            record_df.columns = ['data_type', 'title', 'owner_org', 'contact_person', 'contact_email', 'tag_string', 'notes', 'objective', 'update_frequency_unit', 'update_frequency_interval', 'geo_coverage', 'data_source', 'data_source_scope', 'data_format', 'data_category', 'data_classification', 'license_id', 'accessible_condition', 'created_date', 'last_updated_date', 'url', 'data_language', 'high_value_dataset', 'master_data_list', 'Platform_list', 'data_steward', 'data_quality', 'certified_date']
             record_df = record_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
             record_df.replace(np.nan, '', regex=True, inplace=True)
             
@@ -132,7 +132,7 @@ class DatasetImportController(p.toolkit.BaseController):
             
         except Exception as err:
            log.info(err)
-           record_df = pd.DataFrame(columns=['data_type', 'title', 'owner', 'contact_person', 'contact_email', 'tag_string', 'notes', 'objective', 'update_frequency_unit', 'update_frequency_interval', 'geo_coverage', 'data_source', 'data_source_scope', 'data_format', 'data_category', 'data_classification', 'license_id', 'accessible_condition', 'created_date', 'last_updated_date', 'url', 'data_language', 'high_value_dataset', 'master_data_list', 'Platform_list', 'data_steward', 'data_quality', 'certified_date'])
+           record_df = pd.DataFrame(columns=['data_type', 'title', 'owner_org', 'contact_person', 'contact_email', 'tag_string', 'notes', 'objective', 'update_frequency_unit', 'update_frequency_interval', 'geo_coverage', 'data_source', 'data_source_scope', 'data_format', 'data_category', 'data_classification', 'license_id', 'accessible_condition', 'created_date', 'last_updated_date', 'url', 'data_language', 'high_value_dataset', 'master_data_list', 'Platform_list', 'data_steward', 'data_quality', 'certified_date'])
            record_df = record_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
            record_df.replace(np.nan, '', regex=True, inplace=True)
             
@@ -1014,36 +1014,10 @@ class DatasetImportController(p.toolkit.BaseController):
 
                 row_count = 0
 
-                record_df = pd.read_excel(filename, header=[3], sheet_name='Temp2_Meta_Record', dtype=str)
-                if template_org != 'all':
-                    row_count += record_df.iloc[:, 3].tolist().count(template_org)
-                else:
-                    row_count += (len(record_df.index)-1)
                 
-                stat_df = pd.read_excel(filename, header=[3], sheet_name='Temp2_Meta_Stat', dtype=str)
-                if template_org != 'all':
-                    row_count += stat_df.iloc[:, 3].tolist().count(template_org)
-                else:
-                    row_count += (len(stat_df.index)-1)
+                record_df = pd.read_excel(filename, header=[2], sheet_name='OIC_Meta', dtype=str)
+                row_count += (len(record_df.index)-1)
 
-                gis_df = pd.read_excel(filename, header=[3], sheet_name='Temp2_Meta_GIS', dtype=str)
-                if template_org != 'all':
-                    row_count += gis_df.iloc[:, 3].tolist().count(template_org)
-                else:
-                    row_count += (len(gis_df.index)-1)
-
-                multi_df = pd.read_excel(filename, header=[3], sheet_name='Temp2_Meta_Multi', dtype=str)
-                if template_org != 'all':
-                    row_count += multi_df.iloc[:, 3].tolist().count(template_org)
-                else:
-                    row_count += (len(multi_df.index)-1)
-
-                other_df = pd.read_excel(filename, header=[3], sheet_name='Temp2_Meta_Other', dtype=str)
-                if template_org != 'all':
-                    row_count += other_df.iloc[:, 3].tolist().count(template_org)
-                else:
-                    row_count += (len(other_df.index)-1)
- 
                 toolkit.get_action('dataset_bulk_import')(context, data_dict)
 
                 data_dict['row'] = row_count
