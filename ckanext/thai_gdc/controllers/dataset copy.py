@@ -42,7 +42,7 @@ class DatasetManageController(p.toolkit.BaseController):
 
     def datatype_patch(self, package_id):
         data = request.GET
-        if 'data_type'in data:
+        if 'data_type' in data:
             try:
                 data_dict = logic.clean_dict(
                     dict_fns.unflatten(
@@ -67,117 +67,9 @@ class DatasetManageController(p.toolkit.BaseController):
 
 class DatasetImportController(p.toolkit.BaseController):
 
-    
-    def _oic_type_process(self, data_dict):
-        try:
-            record_df = pd.read_excel(data_dict['filename'], header=[2], sheet_name='OIC_Meta', dtype=str)
-
-
-            record_df.columns = ['data_type', 'title', 'owner', 'contact_person', 'contact_email', 'tag_string', 'notes', 'objective', 'update_frequency_unit', 'update_frequency_interval', 'geo_coverage', 'data_source', 'data_source_scope', 'data_format', 'data_category', 'data_classification', 'license_id', 'accessible_condition', 'created_date', 'last_updated_date', 'url', 'data_language', 'high_value_dataset', 'master_data_list', 'Platform_list', 'data_steward', 'data_quality', 'certified_date']
-            record_df = record_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
-            record_df.replace(np.nan, '', regex=True, inplace=True)
-            
-            record_df["dataset_name"] = record_df["title"]
-            record_df["title"] = record_df["title"].str.lower()
-            record_df["title"].replace('\s', '-', regex=True, inplace=True)
-
-            if data_dict['template_org'] != 'all':
-                record_df = record_df.loc[record_df['owner'] == data_dict['template_org']]
-                record_df.reset_index(drop=True, inplace=True)
-            record_df["owner"] = data_dict['owner']
-
-            record_df['tag_string'] = record_df.tag_string.astype(str)
-            record_df['tag_string'] = record_df['tag_string'].str.split(',').apply(lambda x: [e.strip() for e in x]).tolist()
-
-
-            update_frequency_unit_choices = ['ปี','ครึ่งปี','ไตรมาส','เดือน','สัปดาห์','วัน','วันทำการ','ชั่วโมง','นาที','ตามเวลาจริง','ไม่มีการปรับปรุงหลังจากการจัดเก็บข้อมูล','อื่นๆ','ไม่ทราบ']
-            record_df['update_frequency_unit_other'] = record_df['update_frequency_unit'].isin(update_frequency_unit_choices)
-            record_df['update_frequency_unit_other'] = record_df.update_frequency_unit_other.astype(str)
-            record_df['update_frequency_unit_other'] = np.where(record_df['update_frequency_unit_other'] == 'True', 'True', record_df['update_frequency_unit'])
-            record_df['update_frequency_unit'] = np.where(record_df['update_frequency_unit_other'] == 'True', record_df['update_frequency_unit'], 'อื่นๆ')
-            record_df['update_frequency_unit_other'].replace('True', '', regex=True, inplace=True)
-
-            geo_coverage_choices = ['ไม่มี','โลก','ทวีป/กลุ่มประเทศในทวีป','กลุ่มประเทศทางเศรษฐกิจ','ประเทศ','ภาค','จังหวัด','อำเภอ','ตำบล','หมู่บ้าน','เทศบาล/อบต.','พิกัด','ไม่ทราบ','อื่นๆ']
-            record_df['geo_coverage_other'] = record_df['geo_coverage'].isin(geo_coverage_choices)
-            record_df['geo_coverage_other'] = record_df.geo_coverage_other.astype(str)
-            record_df['geo_coverage_other'] = np.where(record_df['geo_coverage_other'] == 'True', 'True', record_df['geo_coverage'])
-            record_df['geo_coverage'] = np.where(record_df['geo_coverage_other'] == 'True', record_df['geo_coverage'], 'อื่นๆ')
-            record_df['geo_coverage_other'].replace('True', '', regex=True, inplace=True)
-
-            record_df['high_value_dataset'] = np.where(record_df['high_value_dataset'].str.contains("ไม่"), False, True)
-            record_df['reference_data'] = np.where(record_df['reference_data'].str.contains("ไม่"), False, True)
-
-            record_df["private"] = False
-
-            data_format_choices = ['Database','CSV','XML','Image','Video','Audio','Text','JSON','HTML','XLS','PDF','RDF','NoSQL','Vector','Raster','อื่นๆ']
-            record_df['data_format_other'] = record_df['data_format'].isin(data_format_choices)
-            record_df['data_format_other'] = record_df.data_format_other.astype(str)
-            record_df['data_format_other'] = np.where(record_df['data_format_other'] == 'True', 'True', record_df['data_format'])
-            record_df['data_format'] = np.where(record_df['data_format_other'] == 'True', record_df['data_format'], u'อื่นๆ')
-            record_df['data_format_other'].replace('True', '', regex=True, inplace=True)
-
-            license_id_choices = ['Creative Commons Attributions',' Creative Commons Attribution Share- Alike',' Creative Commons Non-Commercial (Any)',' Open Data Common',' GNU Free Documentation License',' License not specified',' Others License']
-            record_df['license_id_other'] = record_df['license_id'].isin(license_id_choices)
-            record_df['license_id_other'] = record_df.license_id_other.astype(str)
-            record_df['license_id_other'] = np.where(record_df['license_id_other'] == 'True', 'True', record_df['license_id'])
-            record_df['license_id'] = np.where(record_df['license_id_other'] == 'True', record_df['license_id'], 'อื่นๆ')
-            record_df['license_id_other'].replace('True', '', regex=True, inplace=True)
-            
-            
-            record_df["created_date"] = pd.to_datetime((pd.to_numeric(record_df["created_date"].str.slice(stop=4), errors='coerce').astype('Int64')-543).astype(str)+record_df["created_date"].str.slice(start=4), errors='coerce').astype(str)
-            record_df["certified_date"] = pd.to_datetime((pd.to_numeric(record_df["certified_date"].str.slice(stop=4), errors='coerce').astype('Int64')-543).astype(str)+record_df["certified_date"].str.slice(start=4), errors='coerce').astype(str)
-            record_df["last_updated_date"] = pd.to_datetime((pd.to_numeric(record_df["last_updated_date"].str.slice(stop=4), errors='coerce').astype('Int64')-543).astype(str)+record_df["last_updated_date"].str.slice(start=4), errors='coerce').astype(str)
-
-            data_language_choices = ['ไทย',' อังกฤษ',' ไม่ทราบ',' อื่นๆ']
-            record_df['data_language_other'] = record_df['data_language'].isin(data_language_choices)
-            record_df['data_language_other'] = record_df.data_language_other.astype(str)
-            record_df['data_language_other'] = np.where(record_df['data_language_other'] == 'True', 'True', record_df['data_language'])
-            record_df['data_language'] = np.where(record_df['data_language_other'] == 'True', record_df['data_language'], u'อื่นๆ')
-            record_df['data_language_other'].replace('True', '', regex=True, inplace=True)
-
-            record_df.replace('NaT', '', regex=True, inplace=True)
-            
-        except Exception as err:
-           log.info(err)
-           record_df = pd.DataFrame(columns=['name','d_type','title','owner_org','maintainer','maintainer_email','tag_string','notes','objective','update_frequency_unit','update_frequency_interval','geo_coverage','data_source','data_format','data_category','license_id','accessible_condition','created_date','last_updated_date','url','data_support','data_collect','data_language','high_value_dataset','reference_data','data_type'])
-           record_df = record_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
-           record_df.replace(np.nan, '', regex=True, inplace=True)
-            
-        portal = LocalCKAN()
-
-        package_dict_list = record_df.to_dict('records')
-        for pkg_meta in package_dict_list:
-            try:
-                if pkg_meta['data_language'] == '':
-                    pkg_meta.pop('data_language', None)
-                    pkg_meta.pop('data_language_other', None)
-                package = portal.action.package_create(**pkg_meta)
-                log_str = 'package_create: '+datetime.datetime.now().isoformat()+'-- สร้างชุดข้อมูล: '+str(package.get("name"))+'สำเร็จ\n'
-                activity_dict = {"data": {"actor": six.ensure_text(data_dict["importer"]), "package":package, 
-                    "import": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}}, 
-                    "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
-                    "object_id": package.get("id"), 
-                    "activity_type": "new package"
-                    }
-                portal.action.activity_create(**activity_dict)
-                log.info(log_str)
-                record_df.loc[record_df['name'] == pkg_meta['name'], 'success'] = '1'
-            except Exception as err:
-                record_df.loc[record_df['name'] == pkg_meta['name'], 'success'] = '0'
-                log_str = 'package_error: '+datetime.datetime.now().isoformat()+'-- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+': '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
-                activity_dict = {"data": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}, 
-                    "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
-                    "object_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
-                    "activity_type": "changed user"
-                    }
-                portal.action.activity_create(**activity_dict)
-                log.info(log_str)
-
-
-
     def _record_type_process(self, data_dict):
         try:
-            record_df = pd.read_excel(data_dict['filename'], header=[3], sheet_name='OIC_Meta', dtype=str)
+            record_df = pd.read_excel(data_dict['filename'], header=[3], sheet_name='Temp2_Meta_Record', dtype=str)
             record_df.drop(0, inplace=True)
             record_df["data_type"] = 'ข้อมูลระเบียน'
 
@@ -277,7 +169,7 @@ class DatasetImportController(p.toolkit.BaseController):
                     pkg_meta.pop('data_language', None)
                     pkg_meta.pop('data_language_other', None)
                 package = portal.action.package_create(**pkg_meta)
-                log_str = 'package_create: '+datetime.datetime.now().isoformat()+'-- สร้างชุดข้อมูล: '+str(package.get("name"))+'สำเร็จ\n'
+                log_str = 'package_create: '+datetime.datetime.now().isoformat()+' -- สร้างชุดข้อมูล: '+str(package.get("name"))+' สำเร็จ\n'
                 activity_dict = {"data": {"actor": six.ensure_text(data_dict["importer"]), "package":package, 
                     "import": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}}, 
                     "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -289,7 +181,7 @@ class DatasetImportController(p.toolkit.BaseController):
                 record_df.loc[record_df['name'] == pkg_meta['name'], 'success'] = '1'
             except Exception as err:
                 record_df.loc[record_df['name'] == pkg_meta['name'], 'success'] = '0'
-                log_str = 'package_error: '+datetime.datetime.now().isoformat()+'-- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+': '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
+                log_str = 'package_error: '+datetime.datetime.now().isoformat()+' -- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+' : '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
                 activity_dict = {"data": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}, 
                     "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
                     "object_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -325,7 +217,7 @@ class DatasetImportController(p.toolkit.BaseController):
             for resource_dict in resource_dict_list:
                 res_meta = resource_dict
                 resource = portal.action.resource_create(**res_meta)
-                log.info('resource_create: '+datetime.datetime.now().isoformat()+'-- '+str(resource)+'\n')
+                log.info('resource_create: '+datetime.datetime.now().isoformat()+' -- '+str(resource)+'\n')
         except Exception as err:
             log.info(err)
 
@@ -434,7 +326,7 @@ class DatasetImportController(p.toolkit.BaseController):
                     pkg_meta.pop('data_language', None)
                     pkg_meta.pop('data_language_other', None)
                 package = portal.action.package_create(**pkg_meta)
-                log_str = 'package_create: '+datetime.datetime.now().isoformat()+'-- สร้างชุดข้อมูล: '+str(package.get("name"))+'สำเร็จ\n'
+                log_str = 'package_create: '+datetime.datetime.now().isoformat()+' -- สร้างชุดข้อมูล: '+str(package.get("name"))+' สำเร็จ\n'
                 activity_dict = {"data": {"actor": six.ensure_text(data_dict["importer"]), "package":package, 
                     "import": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}}, 
                     "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -446,7 +338,7 @@ class DatasetImportController(p.toolkit.BaseController):
                 stat_df.loc[stat_df['name'] == pkg_meta['name'], 'success'] = '1'
             except Exception as err:
                 stat_df.loc[stat_df['name'] == pkg_meta['name'], 'success'] = '0'
-                log_str = 'package_error: '+datetime.datetime.now().isoformat()+'-- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+': '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
+                log_str = 'package_error: '+datetime.datetime.now().isoformat()+' -- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+' : '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
                 activity_dict = {"data": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}, 
                     "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
                     "object_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -493,7 +385,7 @@ class DatasetImportController(p.toolkit.BaseController):
                     res_meta.pop('resource_disaggregate', None)
                     res_meta.pop('resource_disaggregate_other', None)
                 resource = portal.action.resource_create(**res_meta)
-                log.info('resource_create: '+datetime.datetime.now().isoformat()+'-- '+str(resource)+'\n')
+                log.info('resource_create: '+datetime.datetime.now().isoformat()+' -- '+str(resource)+'\n')
         except Exception as err:
             log.info(err)
 
@@ -591,7 +483,7 @@ class DatasetImportController(p.toolkit.BaseController):
                     pkg_meta.pop('data_language', None)
                     pkg_meta.pop('data_language_other', None)
                 package = portal.action.package_create(**pkg_meta)
-                log_str = 'package_create: '+datetime.datetime.now().isoformat()+'-- สร้างชุดข้อมูล: '+str(package.get("name"))+'สำเร็จ\n'
+                log_str = 'package_create: '+datetime.datetime.now().isoformat()+' -- สร้างชุดข้อมูล: '+str(package.get("name"))+' สำเร็จ\n'
                 activity_dict = {"data": {"actor": six.ensure_text(data_dict["importer"]), "package":package, 
                     "import": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}}, 
                     "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -603,7 +495,7 @@ class DatasetImportController(p.toolkit.BaseController):
                 gis_df.loc[gis_df['name'] == pkg_meta['name'], 'success'] = '1'
             except Exception as err:
                 gis_df.loc[gis_df['name'] == pkg_meta['name'], 'success'] = '0'
-                log_str = 'package_error: '+datetime.datetime.now().isoformat()+'-- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+': '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
+                log_str = 'package_error: '+datetime.datetime.now().isoformat()+' -- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+' : '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
                 activity_dict = {"data": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}, 
                     "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
                     "object_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -640,7 +532,7 @@ class DatasetImportController(p.toolkit.BaseController):
             for resource_dict in resource_dict_list:
                 res_meta = resource_dict
                 resource = portal.action.resource_create(**res_meta)
-                log.info('resource_create: '+datetime.datetime.now().isoformat()+'-- '+str(resource)+'\n')
+                log.info('resource_create: '+datetime.datetime.now().isoformat()+' -- '+str(resource)+'\n')
         except Exception as err:
             log.info(err)
 
@@ -746,7 +638,7 @@ class DatasetImportController(p.toolkit.BaseController):
                     pkg_meta.pop('data_language', None)
                     pkg_meta.pop('data_language_other', None)
                 package = portal.action.package_create(**pkg_meta)
-                log_str = 'package_create: '+datetime.datetime.now().isoformat()+'-- สร้างชุดข้อมูล: '+str(package.get("name"))+'สำเร็จ\n'
+                log_str = 'package_create: '+datetime.datetime.now().isoformat()+' -- สร้างชุดข้อมูล: '+str(package.get("name"))+' สำเร็จ\n'
                 activity_dict = {"data": {"actor": six.ensure_text(data_dict["importer"]), "package":package, 
                     "import": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}}, 
                     "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -758,7 +650,7 @@ class DatasetImportController(p.toolkit.BaseController):
                 multi_df.loc[multi_df['name'] == pkg_meta['name'], 'success'] = '1'
             except Exception as err:
                 multi_df.loc[multi_df['name'] == pkg_meta['name'], 'success'] = '0'
-                log_str = 'package_error: '+datetime.datetime.now().isoformat()+'-- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+': '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
+                log_str = 'package_error: '+datetime.datetime.now().isoformat()+' -- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+' : '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
                 activity_dict = {"data": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}, 
                     "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
                     "object_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -794,7 +686,7 @@ class DatasetImportController(p.toolkit.BaseController):
             for resource_dict in resource_dict_list:
                 res_meta = resource_dict
                 resource = portal.action.resource_create(**res_meta)
-                log.info('resource_create: '+datetime.datetime.now().isoformat()+'-- '+str(resource)+'\n')
+                log.info('resource_create: '+datetime.datetime.now().isoformat()+' -- '+str(resource)+'\n')
         except Exception as err:
             log.info(err)
 
@@ -899,7 +791,7 @@ class DatasetImportController(p.toolkit.BaseController):
                     pkg_meta.pop('data_language', None)
                     pkg_meta.pop('data_language_other', None)
                 package = portal.action.package_create(**pkg_meta)
-                log_str = 'package_create: '+datetime.datetime.now().isoformat()+'-- สร้างชุดข้อมูล: '+str(package.get("name"))+'สำเร็จ\n'
+                log_str = 'package_create: '+datetime.datetime.now().isoformat()+' -- สร้างชุดข้อมูล: '+str(package.get("name"))+' สำเร็จ\n'
                 activity_dict = {"data": {"actor": six.ensure_text(data_dict["importer"]), "package":package, 
                     "import": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}}, 
                     "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -911,7 +803,7 @@ class DatasetImportController(p.toolkit.BaseController):
                 other_df.loc[other_df['name'] == pkg_meta['name'], 'success'] = '1'
             except Exception as err:
                 other_df.loc[other_df['name'] == pkg_meta['name'], 'success'] = '0'
-                log_str = 'package_error: '+datetime.datetime.now().isoformat()+'-- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+': '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
+                log_str = 'package_error: '+datetime.datetime.now().isoformat()+' -- ไม่สามารถสร้างชุดข้อมูล: '+str(pkg_meta['name'])+' : '+str(err).encode('utf-8').decode('unicode-escape')+'\n'
                 activity_dict = {"data": {"import_id": data_dict["import_uuid"], "import_status": "Running", "import_log": log_str}, 
                     "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
                     "object_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -947,13 +839,13 @@ class DatasetImportController(p.toolkit.BaseController):
             for resource_dict in resource_dict_list:
                 res_meta = resource_dict
                 resource = portal.action.resource_create(**res_meta)
-                log.info('resource_create: '+datetime.datetime.now().isoformat()+'-- '+str(resource)+'\n')
+                log.info('resource_create: '+datetime.datetime.now().isoformat()+' -- '+str(resource)+'\n')
         except Exception as err:
             log.info(err)
     
     def _finished_process(self, data_dict):
         portal = LocalCKAN()
-        log_str = 'import finished: '+datetime.datetime.now().isoformat()+'-- จบการทำงาน\n'
+        log_str = 'import finished: '+datetime.datetime.now().isoformat()+' -- จบการทำงาน\n'
         activity_dict = {"data": {"import_id": data_dict["import_uuid"], "import_status": "Finished", "import_log": log_str}, 
             "user_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
             "object_id": model.User.by_name(six.ensure_text(data_dict["importer"])).id, 
@@ -975,7 +867,7 @@ class DatasetImportController(p.toolkit.BaseController):
                 'field_url': 'template_file', 'field_upload': 'template_file_upload', 'field_clear': 'clear_template_file_upload'},
         ]
         data = request.POST
-        if 'save'in data:
+        if 'save' in data:
             try:
                 # really?
                 data_dict = logic.clean_dict(
@@ -1000,7 +892,7 @@ class DatasetImportController(p.toolkit.BaseController):
 
                 for key, value in six.iteritems(data):
                 
-                    if key == 'template_file'and value and not value.startswith('http')\
+                    if key == 'template_file' and value and not value.startswith('http')\
                             and not value.startswith('/'):
                         image_path = 'uploads/admin/'
 
