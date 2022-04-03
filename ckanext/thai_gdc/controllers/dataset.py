@@ -72,7 +72,6 @@ class DatasetImportController(p.toolkit.BaseController):
         try:
             record_df = pd.read_excel(data_dict['filename'], header=[2], sheet_name='OIC_Meta', dtype=str)
 
-
             record_df.columns = ['data_type', 'title', 'owner', 'contact_person', 'contact_email', 'tag_string', 'notes', 'objective', 'update_frequency_unit', 'update_frequency_interval', 'geo_coverage', 'data_source', 'data_source_scope', 'data_format', 'data_category', 'data_classification', 'license_id', 'accessible_condition', 'created_date', 'last_updated_date', 'url', 'data_language', 'high_value_dataset', 'master_data_list', 'Platform_list', 'data_steward', 'data_quality', 'certified_date']
             record_df = record_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
             record_df.replace(np.nan, '', regex=True, inplace=True)
@@ -105,7 +104,6 @@ class DatasetImportController(p.toolkit.BaseController):
             record_df['geo_coverage_other'].replace('True', '', regex=True, inplace=True)
 
             record_df['high_value_dataset'] = np.where(record_df['high_value_dataset'].str.contains("ไม่"), False, True)
-            record_df['reference_data'] = np.where(record_df['reference_data'].str.contains("ไม่"), False, True)
 
             record_df["private"] = False
 
@@ -116,7 +114,7 @@ class DatasetImportController(p.toolkit.BaseController):
             record_df['data_format'] = np.where(record_df['data_format_other'] == 'True', record_df['data_format'], u'อื่นๆ')
             record_df['data_format_other'].replace('True', '', regex=True, inplace=True)
 
-            license_id_choices = ['Creative Commons Attributions',' Creative Commons Attribution Share- Alike',' Creative Commons Non-Commercial (Any)',' Open Data Common',' GNU Free Documentation License',' License not specified',' Others License']
+            license_id_choices = ['Creative Commons Attributions','Creative Commons Attribution Share- Alike','Creative Commons Non-Commercial (Any)','Open Data Common','GNU Free Documentation License','License not specified','Others License']
             record_df['license_id_other'] = record_df['license_id'].isin(license_id_choices)
             record_df['license_id_other'] = record_df.license_id_other.astype(str)
             record_df['license_id_other'] = np.where(record_df['license_id_other'] == 'True', 'True', record_df['license_id'])
@@ -128,7 +126,7 @@ class DatasetImportController(p.toolkit.BaseController):
             record_df["certified_date"] = pd.to_datetime((pd.to_numeric(record_df["certified_date"].str.slice(stop=4), errors='coerce').astype('Int64')-543).astype(str)+record_df["certified_date"].str.slice(start=4), errors='coerce').astype(str)
             record_df["last_updated_date"] = pd.to_datetime((pd.to_numeric(record_df["last_updated_date"].str.slice(stop=4), errors='coerce').astype('Int64')-543).astype(str)+record_df["last_updated_date"].str.slice(start=4), errors='coerce').astype(str)
 
-            data_language_choices = ['ไทย',' อังกฤษ',' ไม่ทราบ',' อื่นๆ']
+            data_language_choices = ['ไทย','อังกฤษ','ไม่ทราบ','อื่นๆ']
             record_df['data_language_other'] = record_df['data_language'].isin(data_language_choices)
             record_df['data_language_other'] = record_df.data_language_other.astype(str)
             record_df['data_language_other'] = np.where(record_df['data_language_other'] == 'True', 'True', record_df['data_language'])
@@ -139,7 +137,7 @@ class DatasetImportController(p.toolkit.BaseController):
             
         except Exception as err:
            log.info(err)
-           record_df = pd.DataFrame(columns=['name','d_type','title','owner_org','maintainer','maintainer_email','tag_string','notes','objective','update_frequency_unit','update_frequency_interval','geo_coverage','data_source','data_format','data_category','license_id','accessible_condition','created_date','last_updated_date','url','data_support','data_collect','data_language','high_value_dataset','reference_data','data_type'])
+           record_df = pd.DataFrame(columns=['data_type', 'title', 'owner', 'contact_person', 'contact_email', 'tag_string', 'notes', 'objective', 'update_frequency_unit', 'update_frequency_interval', 'geo_coverage', 'data_source', 'data_source_scope', 'data_format', 'data_category', 'data_classification', 'license_id', 'accessible_condition', 'created_date', 'last_updated_date', 'url', 'data_language', 'high_value_dataset', 'master_data_list', 'Platform_list', 'data_steward', 'data_quality', 'certified_date'])
            record_df = record_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
            record_df.replace(np.nan, '', regex=True, inplace=True)
             
