@@ -1206,6 +1206,32 @@
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
       },
       {
+        "field_name": "personal_data",
+        "label": {
+          "en": "Personal Data",
+          "th": "ข้อมูลส่วนบุคคล"
+        },
+        "choices": [
+          {
+            "value": "False",
+            "label": {
+              "en": "No",
+              "th": "ไม่เป็น"
+            }
+          },
+          {
+            "value": "True",
+            "label": {
+              "en": "Yes",
+              "th": "เป็น"
+            }
+          }
+        ],
+        "form_snippet": "select.html",
+        "display_snippet": "select.html",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
+      },
+      {
         "field_name": "license_id",
         "label": "License",
         "choices": [

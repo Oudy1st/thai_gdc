@@ -100,9 +100,11 @@ class DatasetImportController(p.toolkit.BaseController):
             record_df['geo_coverage'] = np.where(record_df['geo_coverage_other'] == 'True', record_df['geo_coverage'], 'อื่นๆ')
             record_df['geo_coverage_other'].replace('True', '', regex=True, inplace=True)
 
-            record_df['high_value_dataset'] = np.where(record_df['high_value_dataset'].str.contains("ไม่"), False, True)
+            record_df["owner_org"] = data_dict['owner_org']
+            record_df["private"] = True
+            record_df["allow_harvest"] = False
 
-            record_df["private"] = False
+            record_df['high_value_dataset'] = np.where(record_df['high_value_dataset'].str.contains("ไม่"), False, True)
 
             data_format_choices = ['Database','CSV','XML','Image','Video','Audio','Text','JSON','HTML','XLS','PDF','RDF','NoSQL','Vector','Raster','อื่นๆ']
             record_df['data_format_other'] = record_df['data_format'].isin(data_format_choices)
@@ -168,36 +170,6 @@ class DatasetImportController(p.toolkit.BaseController):
                 portal.action.activity_create(**activity_dict)
                 log.info(log_str)
 
-        try:
-            resource_df = pd.read_excel(data_dict['filename'], header=[3], sheet_name='Temp3_Resource_Other', dtype=str)
-            resource_df.drop(0, inplace=True)
-            resource_df.columns = ['dataset_name','resource_name','resource_url','description','resource_accessible_condition','resource_last_updated_date','format','resource_created_date','resource_data_collect']
-            resource_df = resource_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
-            resource_df.replace(np.nan, '', regex=True, inplace=True)
-        except:
-            resource_df = pd.DataFrame(columns=['dataset_name','resource_name','resource_url','description','resource_accessible_condition','resource_last_updated_date','format','resource_created_date','resource_data_collect'])
-            resource_df = resource_df.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
-            resource_df.replace(np.nan, '', regex=True, inplace=True)
-
-        try:
-            final_df = pd.merge(other_df,resource_df,how='left',left_on='dataset_name',right_on='dataset_name')
-            final_df.replace(np.nan, '', regex=True, inplace=True)
-            resource_df = final_df[(final_df['resource_url'] != '') & (final_df['success'] == '1')]
-            resource_df = resource_df[['name','success','resource_name','resource_url','description','resource_accessible_condition','resource_last_updated_date','format','resource_created_date','resource_data_collect']]
-            resource_df.columns = ['package_id','success','name','url','description','resource_accessible_condition','resource_last_updated_date','format','resource_created_date','resource_data_collect']
-            resource_df["resource_created_date"] = pd.to_datetime((pd.to_numeric(resource_df["resource_created_date"].str.slice(stop=4), errors='coerce').astype('Int64')-543).astype(str)+resource_df["resource_created_date"].str.slice(start=4), errors='coerce').astype(str)
-            resource_df["resource_last_updated_date"] = pd.to_datetime((pd.to_numeric(resource_df["resource_last_updated_date"].str.slice(stop=4), errors='coerce').astype('Int64')-543).astype(str)+resource_df["resource_last_updated_date"].str.slice(start=4), errors='coerce').astype(str)
-            resource_df['created'] = datetime.datetime.utcnow().isoformat()
-            resource_df['last_modified'] = datetime.datetime.utcnow().isoformat()
-            resource_df.replace('NaT', '', regex=True, inplace=True)
-            resource_dict_list = resource_df.to_dict('records')
-
-            for resource_dict in resource_dict_list:
-                res_meta = resource_dict
-                resource = portal.action.resource_create(**res_meta)
-                log.info('resource_create: '+datetime.datetime.now().isoformat()+'-- '+str(resource)+'\n')
-        except Exception as err:
-            log.info(err)
 
     def _record_type_process(self, data_dict):
         try:
