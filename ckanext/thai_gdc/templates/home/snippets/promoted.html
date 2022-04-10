@@ -1,13 +1,13 @@
 {% ckan_extends %}
 
-<form id="user-register-form" action="" method="post" enctype="multipart/form-data">
-  <p>OIC Login</p>
-  <input type="text" id="field-username" />
-  <input type="password" id="field-password" />
-
-  <div class="form-actions">
-    {% block form_actions %}
-    <button class="btn btn-primary" type="submit" name="login">{{ _("Create Account") }}</button>
-    {% endblock %}
-  </div>
-</form>
+  {% block home_image %}
+    <section class="featured media-overlay hidden-xs">
+      {% block home_image_content %}
+        {% if g.promoted_banner %}
+          <img class="img-responsive" style="min-width: 100%;" src="{{ h.url_for_static(g.promoted_banner) }}" width="420" height="220" />
+        {% else %}
+          <img class="img-responsive" style="min-width: 100%;" src="{{ h.url_for_static('/base/images/gdc-banner.jpg') }}" alt="Placeholder" width="420" height="220" />
+        {% endif %}
+      {% endblock %}
+    </section>
+  {% endblock %}
