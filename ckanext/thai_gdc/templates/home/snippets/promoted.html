@@ -1,4 +1,5 @@
 {% ckan_extends %}
+{% import "macros/form.html" as form %}
 
   {% block home_image %}
     <section class="featured media-overlay hidden-xs">
@@ -8,6 +9,20 @@
         {% else %}
           <img class="img-responsive" style="min-width: 100%;" src="{{ h.url_for_static('/base/images/gdc-banner.jpg') }}" alt="Placeholder" width="420" height="220" />
         {% endif %}
+
+        <form id="user-register-form" action="" method="post" enctype="multipart/form-data">
+          {{ form.errors(error_summary) }}
+          {{ form.input("name", id="field-username", label=_("Username"), placeholder=_("username"), value=data.name, error=errors.name, classes=["control-medium"], is_required=True) }}
+          {{ form.input("password1", id="field-password", label=_("Password"), type="password", placeholder="••••••••", value=data.password1, error=errors.password1, classes=["control-medium"], is_required=True) }}
+         
+          {{ form.required_message() }}
+        
+          <div class="form-actions">
+            {% block form_actions %}
+            <button class="btn btn-primary" type="submit" name="login">{{ _("Create Account") }}</button>
+            {% endblock %}
+          </div>
+        </form>
       {% endblock %}
     </section>
   {% endblock %}
