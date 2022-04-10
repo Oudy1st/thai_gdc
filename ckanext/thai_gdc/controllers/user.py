@@ -47,3 +47,11 @@ class UserManageController(plugins.toolkit.BaseController):
                 h.redirect_to(controller='user', action='read', id=data['id'])
             except logic.ValidationError as e:
                 return e
+
+
+
+class OICLoginController(plugins.toolkit.BaseController):
+
+    def login(self):
+        extra_vars = {}
+        return render('home/oiclogin.html', extra_vars=extra_vars)
