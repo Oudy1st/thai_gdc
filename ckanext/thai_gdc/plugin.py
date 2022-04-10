@@ -152,6 +152,21 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
             controller='ckanext.thai_gdc.controllers.organization:OrganizationCustomController'
         )
 
+
+        map.connect(
+            'oic_login',
+            '/oiclogin',
+            action='index',
+            controller='ckanext.thai_gdc.controllers.oiclogin:OICLoginController'
+        )
+        
+        map.connect(
+            'oic_login',
+            '/oiclogin/',
+            action='index',
+            controller='ckanext.thai_gdc.controllers.oiclogin:OICLoginController'
+        )
+
         return map
 
     def update_config_schema(self, schema):
