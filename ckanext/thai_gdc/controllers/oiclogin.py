@@ -39,9 +39,6 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 class OICLoginController(p.toolkit.BaseController):
-    def index(self):
-        extra_vars = {}
-        return render('home/oiclogin.html', extra_vars=extra_vars)
 
     def login(self):
         data = request.POST

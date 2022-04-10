@@ -156,14 +156,14 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
         map.connect(
             'oic_login',
             '/oiclogin',
-            action='index',
+            action='login',
             controller='ckanext.thai_gdc.controllers.oiclogin:OICLoginController'
         )
         
         map.connect(
             'oic_login',
             '/oiclogin/',
-            action='index',
+            action='login',
             controller='ckanext.thai_gdc.controllers.oiclogin:OICLoginController'
         )
 
