@@ -4,16 +4,18 @@
 
   {% block home_image %}
     <section class="featured media-overlay">
-      <form id="test">
-        <span>OIC Login</span>
-        <br/>
-        <input type="text" id="username">
-        <br/>
-        <input type="password" id="password">
 
+      <form id="user-login-form" action="" method="post" enctype="multipart/form-data">
+        {{ form.input("name", id="field-username", label=_("Username"), placeholder=_("username"), value=data.name, error=errors.name, classes=["control-medium"], is_required=True) }}
+        {{ form.input("password", id="field-password", label=_("Password"), type="password", placeholder="••••••••", value=data.password, error=errors.password, classes=["control-medium"], is_required=True) }}
+       
+        
+        {#{ form.errors(error_summary) }#}
+      
         <div class="form-actions">
-          <button class="btn btn-primary" type="submit" name="login"></button>
+          <button type="submit" class="btn btn-primary" name="login">เข้าสู่ระบบ</button>
         </div>
       </form>
+
     </section>
   {% endblock %}
