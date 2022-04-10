@@ -2,6 +2,9 @@
 
   {% block home_image %}
     <section class="featured media-overlay hidden-xs">
+      <form id="test">
+        <span>test message</span>
+      </form>
       {% block home_image_content %}
         {% if g.promoted_banner %}
           <img class="img-responsive" style="min-width: 100%;" src="{{ h.url_for_static(g.promoted_banner) }}" width="420" height="220" />
