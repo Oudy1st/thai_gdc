@@ -1,11 +1,14 @@
 {% ckan_extends %}
 
+{% import "macros/form.html" as form %}
+
   {% block home_image %}
     <section class="featured media-overlay">
       <form id="test">
         <span>OIC Login</span>
         <br/>
         <input type="text" id="username">
+        <br/>
         <input type="password" id="password">
 
         <div class="form-actions">
