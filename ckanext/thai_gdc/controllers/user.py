@@ -164,6 +164,6 @@ class OICLoginController(plugins.toolkit.BaseController):
         if 'username' in data:
             extra_vars = {'data': data, 'errors': {}, 'username': data['username']}
         else:
-            extra_vars = {'data': {}, 'errors': {}, 'username': 'test'}
+            extra_vars = {'data': {}, 'errors': {}, 'username': ''}
 
         return base.render('user/oiclogin3.html', extra_vars=extra_vars)

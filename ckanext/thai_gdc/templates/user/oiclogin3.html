@@ -1,6 +1,8 @@
 
 <form id="oic-login-form" action="" method="post" enctype="multipart/form-data">
-  <span>{{username}}</span>
+  {% if username!='' %}
+  <span>{{username}}</span><br/>
+  {% endif %}
   <input type="text" id="username" name="username">
   <br/>
   <input type="password" id="password" name="password">
