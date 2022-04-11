@@ -164,7 +164,7 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
             'oic_login',
             '/oiclogin/',
             action='index',
-            controller='ckanext.thai_gdc.controllers.organization:OrganizationCustomController'
+            controller='ckanext.thai_gdc.controllers.user:OICLoginController'
         )
 
         return map
