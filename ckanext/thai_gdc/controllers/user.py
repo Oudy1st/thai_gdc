@@ -158,4 +158,12 @@ class OICLoginController(plugins.toolkit.BaseController):
         
     def index3(self):
         extra_vars = {}
+
+        data = request.POST
+
+        if 'username' in data:
+            extra_vars = {'data': data, 'errors': {}, 'username': data['username']}
+        else:
+            extra_vars = {'data': {}, 'errors': {}, 'username': 'test'}
+
         return base.render('user/oiclogin3.html', extra_vars=extra_vars)
