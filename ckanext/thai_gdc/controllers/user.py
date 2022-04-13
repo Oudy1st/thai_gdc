@@ -63,23 +63,37 @@ class UserManageController(plugins.toolkit.BaseController):
 
 
 class OICLoginController(plugins.toolkit.BaseController):
+    @staticmethod
+    def make_password():
+        # create a hard to guess password
+        out = ''
+        for n in xrange(8):
+            out += str(uuid.uuid4())
+        return out
 
     def index(self):
         extra_vars = {}
 
         data = request.POST
 
-        if 'username' in data and 'password' in data:
+        if 'username' in data and 'password' in data and data['password']!='':
             login = data['username']
             password = data['password']
             extra_vars = {'data': data, 'errors': {}, 'username': data['username']}
-            session['oic-user'] = data['username']
+
+            user = {'email': 'oudy2nd@gmail.com',
+                    'name': data['username'],
+                    'password': self.make_password(),
+                    'sysadmin': True }
+            user = plugins.toolkit.get_action('user_create')({'ignore_auth': True}, user)
+            session['oic-user'] = user['name']
             session.save()
+
             return toolkit.redirect_to('user.logged_in')
 
         elif 'username' in data:
             extra_vars = {'data': data, 'errors': {}, 'username': data['username']}
-            
+
         else:
             extra_vars = {'data': {}, 'errors': {}, 'username': ''}
 
