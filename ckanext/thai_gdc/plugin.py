@@ -19,15 +19,12 @@ from ckan.model.core import State
 
 from ckan.common import session
 
-from ckan.model import model
-
 from ckanext.thai_gdc.logic import (
     bulk_update_public, dataset_bulk_import, tag_list
 )
 
 import logging
 import os
-import uuid
 
 Invalid = df.Invalid
 missing = df.missing
@@ -378,7 +375,8 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
         '''
         Identify which user (if any) is logged in via this plugin
         '''
-        user = session.get('oic-user')
+        # FIXME: This breaks if the current user changes their own user name.
+        user = session.get('ckanext-oic-user')
         if user:
             toolkit.c.user = user
         else:
@@ -390,8 +388,8 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
         self._delete_session_items()
 
     def _delete_session_items(self):
-        if 'oic-user' in session:
-            del session['oic-user']
+        if 'ckanext-oic-user' in session:
+            del session['ckanext-oic-user']
             session.save()
 
 def tag_name_validator(value, context):

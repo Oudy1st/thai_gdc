@@ -115,14 +115,14 @@ class OICLoginController(plugins.toolkit.BaseController):
             else:
                 raise Exception("Found invalid number of users with this username {}".format(username))
 
-            session['oic-user'] = user['name']
+            session['ckanext-oic-user'] = user['name']
             session.save()
 
-            return toolkit.redirect_to(controller='user', action='dashboard')
-            # return toolkit.redirect_to('user.logged_in')
+            # return toolkit.redirect_to(controller='user', action='dashboard')
+            return toolkit.redirect_to('user.logged_in')
 
         elif 'username' in data:
-            extra_vars = {'data': data, 'errors': 'username or password invalid', 'username': data['username']}
+            extra_vars = {'data': data, 'errors': {}, 'username': data['username']}
 
         else:
             extra_vars = {'data': {}, 'errors': {}, 'username': ''}
