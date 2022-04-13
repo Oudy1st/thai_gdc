@@ -1,6 +1,12 @@
 {% ckan_extends %}
 
 
+{% block header_account_notlogged %}
+  <li><a href="./user/login">{{ _('Log in') }}</a></li>
+  <li><a href="./user/oiclogin">{{ _('OIC Login') }}</a></li>
+{% endblock %}
+
+
 {% block header_account_logged %}
 <li>
   <a href="/user" title="{{ _('User') }}">
