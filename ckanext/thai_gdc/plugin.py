@@ -27,6 +27,7 @@ from ckanext.thai_gdc.logic import (
 
 import logging
 import os
+import uuid
 
 Invalid = df.Invalid
 missing = df.missing
@@ -372,55 +373,18 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
         action.
         '''
         pass
+
     def identify(self):
         '''
         Identify which user (if any) is logged in via this plugin
         '''
-        # FIXME: This breaks if the current user changes their own user name.
         user = session.get('oic-user')
         if user:
-            self.checkUser(user)
+            toolkit.c.user = user
         else:
             # add the 'user' attribute to the context to avoid issue #4247
             toolkit.c.user = None
 
-    def get_ckanuser(self, user):
-
-        # user_ckan = model.User.by_name(user)
-
-        if user_ckan:
-            user_dict = toolkit.get_action('user_show')(data_dict={'id': user['name']})
-            return user_dict
-        else:
-            return None
-
-    def checkUser(self, user_data):
-        
-        user = self.get_ckanuser(user_data['name'])
-        
-        if not user:
-
-        # if user:
-        #     # update the user in ckan only if ckan data is not matching drupal data
-        #     update = False
-        #     if user_data.mail != user['email']:
-        #         update = True
-        #     if self.is_sysadmin(user_data) != user['sysadmin']:
-        #         update = True
-        #     if update:
-        #         user['email'] = user_data.mail
-        #         user['sysadmin'] = user_data.sysadmin
-        #         user['id'] = user_data.name
-        #         user = plugins.toolkit.get_action('user_update')({'ignore_auth': True}, user)
-        # else:
-            user = {'email': user['email'],
-                    'name': user['name'],
-                    'password': user['password'],
-                    'sysadmin': user['sysadmin']}
-            user = plugins.toolkit.get_action('user_create')({'ignore_auth': True}, user)
-        plugins.toolkit.c.user = user['name']
-
-    
     # IAuthenticator
     def logout(self):
         self._delete_session_items()
