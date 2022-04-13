@@ -67,7 +67,7 @@ class OICLoginController(plugins.toolkit.BaseController):
     def make_password():
         # create a hard to guess password
         out = ''
-        for n in xrange(8):
+        for n in range(8):
             out += str(uuid.uuid4())
         return out
         
@@ -85,6 +85,7 @@ class OICLoginController(plugins.toolkit.BaseController):
         except plugins.toolkit.ObjectNotFound:
             pass
             user = None
+            
         if user:
             # update the user in ckan only if ckan data is not matching drupal data
             update = False
