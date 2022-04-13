@@ -364,6 +364,12 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
         }
     
     # IAuthenticator
+    def login(self):
+        '''
+        We don't need to do anything here as we override the form & implement our own controller
+        action.
+        '''
+        pass
     def identify(self):
         '''
         Identify which user (if any) is logged in via this plugin
