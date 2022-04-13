@@ -76,6 +76,15 @@ class OICLoginController(plugins.toolkit.BaseController):
     def is_sysadmin(self, user_data):
         return user_data.name == 'oudy'
 
+    def get_ckanuser(self, user):
+
+        user_ckan = model.User.by_name(user)
+
+        if user_ckan:
+            user_dict = toolkit.get_action('user_show')(data_dict={'id': user_ckan.id})
+            return user_dict
+        else:
+            return None
 
     def index(self):
         extra_vars = {}
@@ -87,7 +96,7 @@ class OICLoginController(plugins.toolkit.BaseController):
             password = data['password']
             extra_vars = {'data': data, 'errors': {}, 'username': username }
 
-            user = {'email': 'oudy1st@gmail.com',
+            user = {'email': 'oudy2nd@gmail.com',
                     'name': username,
                     'password': 'ThisisPassword',
                     'sysadmin': True}
