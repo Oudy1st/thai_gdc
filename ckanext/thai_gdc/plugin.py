@@ -42,7 +42,6 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IFacets, inherit=True)
     plugins.implements(plugins.IActions)
-
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IAuthenticator, inherit=True)
     plugins.implements(plugins.IConfigurer)
@@ -379,9 +378,7 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
         '''
         Identify which user (if any) is logged in via this plugin
         '''
-        # FIXME: This breaks if the current user changes their own user name.
         
-
         user_id = session.get('ckanext-oic-user')
 
         try:
