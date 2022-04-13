@@ -377,21 +377,21 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
         Identify which user (if any) is logged in via this plugin
         '''
         
-        user_id = session.get('ckanext-oic-user')
+        # user_id = session.get('ckanext-oic-user')
 
-        try:
-            user = toolkit.get_action('user_show')(data_dict={'id': user_id})
-        except logic.NotFound:
-            user = None
-        if user:
-            toolkit.c.user = user['name']
-
-        # user = session.get('ckanext-oic-user')
+        # try:
+        #     user = toolkit.get_action('user_show')(data_dict={'id': user_id})
+        # except logic.NotFound:
+        #     user = None
         # if user:
-        #     toolkit.c.user = user
-        # else:
-        #     # add the 'user' attribute to the context to avoid issue #4247
-        #     toolkit.c.user = None
+        #     toolkit.c.user = user['name']
+
+        user = session.get('ckanext-oic-user')
+        if user:
+            toolkit.c.user = user
+        else:
+            # add the 'user' attribute to the context to avoid issue #4247
+            toolkit.c.user = None
 
     def logout(self):
         self._delete_session_items()
