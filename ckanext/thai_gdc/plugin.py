@@ -17,6 +17,8 @@ from ckanext.thai_gdc import helpers as noh
 import ckan.lib.navl.dictization_functions as df
 from ckan.model.core import State
 
+from ckan.common import session
+
 from ckanext.thai_gdc.logic import (
     bulk_update_public, dataset_bulk_import, tag_list
 )
@@ -360,6 +362,28 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
             'thai_gdc_get_gdcatalog_version_update': noh.get_gdcatalog_version_update,
             'get_site_statistics': noh.get_site_statistics
         }
+    
+    # IAuthenticator
+    def identify(self):
+        '''
+        Identify which user (if any) is logged in via this plugin
+        '''
+        # FIXME: This breaks if the current user changes their own user name.
+        user = session.get('oic-user')
+        if user:
+            toolkit.c.user = user
+        else:
+            # add the 'user' attribute to the context to avoid issue #4247
+            toolkit.c.user = None
+
+    # IAuthenticator
+    def logout(self):
+        self._delete_session_items()
+
+    def _delete_session_items(self):
+        if 'oic-user' in session:
+            del session['oic-user']
+            session.save()
 
 def tag_name_validator(value, context):
 

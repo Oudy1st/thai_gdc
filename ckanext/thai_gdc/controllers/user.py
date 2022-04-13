@@ -9,6 +9,10 @@ from ckan.common import g
 
 import ckan.lib.base as base
 
+from ckan.common import session
+from ckan.model import Session
+from ckan.plugins import toolkit
+
 import uuid
 import hashlib
 import re
@@ -65,10 +69,16 @@ class OICLoginController(plugins.toolkit.BaseController):
 
         data = request.POST
 
-        if 'username' in data:
+        if 'username' in data and 'password' in data:
+            login = data['username']
+            password = data['password']
             extra_vars = {'data': data, 'errors': {}, 'username': data['username']}
-            plugins.toolkit.c.user = data['username']
-            
+            session['oic-user'] = data['username']
+            session.save()
+            return toolkit.redirect_to('user.logged_in')
+
+        elif 'username' in data:
+            extra_vars = {'data': data, 'errors': {}, 'username': data['username']}
             
         else:
             extra_vars = {'data': {}, 'errors': {}, 'username': ''}
