@@ -19,6 +19,8 @@ from ckan.model.core import State
 
 from ckan.common import session
 
+from ckan.model import model
+
 from ckanext.thai_gdc.logic import (
     bulk_update_public, dataset_bulk_import, tag_list
 )
@@ -382,39 +384,43 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
             # add the 'user' attribute to the context to avoid issue #4247
             toolkit.c.user = None
 
+    def get_ckanuser(self, user):
+
+        user_ckan = model.User.by_name(user)
+
+        if user_ckan:
+            user_dict = toolkit.get_action('user_show')(data_dict={'id': user_ckan.id})
+            return user_dict
+        else:
+            return None
 
     def checkUser(self, user_data):
-        try:
-            user = plugins.toolkit.get_action('user_show')(
-                {'return_minimal': True,
-                 'keep_sensitive_data': True,
-                 'keep_email': True},
-                {'id': user_data['name']}
-            )
-        except plugins.toolkit.ObjectNotFound:
-            pass
-            user = None
-            
-        if user:
-            # update the user in ckan only if ckan data is not matching drupal data
-            update = False
-            if user_data.mail != user['email']:
-                update = True
-            if self.is_sysadmin(user_data) != user['sysadmin']:
-                update = True
-            if update:
-                user['email'] = user_data.mail
-                user['sysadmin'] = user_data.sysadmin
-                user['id'] = user_data.name
-                user = plugins.toolkit.get_action('user_update')({'ignore_auth': True}, user)
-        else:
-            user = {'email': user_data.mail,
-                    'name': user_data.name,
-                    'password': user_data.password,
-                    'sysadmin': user_data.sysadmin}
+        
+        user = self.get_ckanuser(user_data['name'])
+        
+        if not user:
+
+        # if user:
+        #     # update the user in ckan only if ckan data is not matching drupal data
+        #     update = False
+        #     if user_data.mail != user['email']:
+        #         update = True
+        #     if self.is_sysadmin(user_data) != user['sysadmin']:
+        #         update = True
+        #     if update:
+        #         user['email'] = user_data.mail
+        #         user['sysadmin'] = user_data.sysadmin
+        #         user['id'] = user_data.name
+        #         user = plugins.toolkit.get_action('user_update')({'ignore_auth': True}, user)
+        # else:
+            user = {'email': user['email'],
+                    'name': user['name'],
+                    'password': user['password'],
+                    'sysadmin': user['sysadmin']}
             user = plugins.toolkit.get_action('user_create')({'ignore_auth': True}, user)
         plugins.toolkit.c.user = user['name']
 
+    
     # IAuthenticator
     def logout(self):
         self._delete_session_items()

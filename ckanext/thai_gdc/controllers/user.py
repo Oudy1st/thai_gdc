@@ -102,7 +102,7 @@ class OICLoginController(plugins.toolkit.BaseController):
                     'sysadmin': True}
 
 
-            session['oic-user'] = username
+            session['oic-user'] = user
             session.save()
 
             return toolkit.redirect_to('user.logged_in')
