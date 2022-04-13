@@ -67,11 +67,9 @@ class OICLoginController(plugins.toolkit.BaseController):
 
         if 'username' in data:
             extra_vars = {'data': data, 'errors': {}, 'username': data['username']}
-
-            # if data['username'] == 'oudy':
-            request.session['oic_user'] = "session" + data['username'] 
-        elif request.session['oic_user'] != '':
-            extra_vars = {'data': data, 'errors': {}, 'username': request.session['oic_user']}
+            plugins.toolkit.c.user = data['username']
+            
+            
         else:
             extra_vars = {'data': {}, 'errors': {}, 'username': ''}
 
