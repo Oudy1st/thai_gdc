@@ -43,6 +43,10 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
     plugins.implements(plugins.IFacets, inherit=True)
     plugins.implements(plugins.IActions)
 
+    plugins.implements(plugins.IRoutes, inherit=True)
+    plugins.implements(plugins.IAuthenticator, inherit=True)
+    plugins.implements(plugins.IConfigurer)
+
     def dataset_facets(self, facets_dict, package_type):
 
         facets_dict['data_type'] = toolkit._('Dataset Type') #ประเภทชุดข้อมูล
@@ -376,14 +380,24 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
         Identify which user (if any) is logged in via this plugin
         '''
         # FIXME: This breaks if the current user changes their own user name.
-        user = session.get('ckanext-oic-user')
-        if user:
-            toolkit.c.user = user
-        else:
-            # add the 'user' attribute to the context to avoid issue #4247
-            toolkit.c.user = None
+        
 
-    # IAuthenticator
+        user_id = session.get('ckanext-oic-user')
+
+        try:
+            user = toolkit.get_action('user_show')(data_dict={'id': user_id})
+        except logic.NotFound:
+            user = None
+        if user:
+            toolkit.c.user = user['name']
+
+        # user = session.get('ckanext-oic-user')
+        # if user:
+        #     toolkit.c.user = user
+        # else:
+        #     # add the 'user' attribute to the context to avoid issue #4247
+        #     toolkit.c.user = None
+
     def logout(self):
         self._delete_session_items()
 
