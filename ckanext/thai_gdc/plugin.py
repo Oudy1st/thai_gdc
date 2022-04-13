@@ -377,10 +377,43 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
         # FIXME: This breaks if the current user changes their own user name.
         user = session.get('oic-user')
         if user:
-            toolkit.c.user = user
+            self.checkUser(user)
         else:
             # add the 'user' attribute to the context to avoid issue #4247
             toolkit.c.user = None
+
+
+    def checkUser(self, user_data):
+        try:
+            user = plugins.toolkit.get_action('user_show')(
+                {'return_minimal': True,
+                 'keep_sensitive_data': True,
+                 'keep_email': True},
+                {'id': user_data['name']}
+            )
+        except plugins.toolkit.ObjectNotFound:
+            pass
+            user = None
+            
+        if user:
+            # update the user in ckan only if ckan data is not matching drupal data
+            update = False
+            if user_data.mail != user['email']:
+                update = True
+            if self.is_sysadmin(user_data) != user['sysadmin']:
+                update = True
+            if update:
+                user['email'] = user_data.mail
+                user['sysadmin'] = user_data.sysadmin
+                user['id'] = user_data.name
+                user = plugins.toolkit.get_action('user_update')({'ignore_auth': True}, user)
+        else:
+            user = {'email': user_data.mail,
+                    'name': user_data.name,
+                    'password': user_data.password,
+                    'sysadmin': user_data.sysadmin}
+            user = plugins.toolkit.get_action('user_create')({'ignore_auth': True}, user)
+        plugins.toolkit.c.user = user['name']
 
     # IAuthenticator
     def logout(self):
