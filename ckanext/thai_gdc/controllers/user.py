@@ -86,6 +86,24 @@ class OICLoginController(plugins.toolkit.BaseController):
         else:
             return None
 
+    def checkUser(self, user_data):
+        
+
+        name = user_data['name']
+        users = toolkit.get_action('user_list')(data_dict=dict(q=name), context={'ignore_auth': True})
+        user_create = toolkit.get_action('user_create')
+
+        if len(users) == 1:
+            user = users[0]
+        elif len(users) == 0:
+            user = {'email': user_data['email'],
+                    'name': user_data['name'],
+                    'password': str(uuid.uuid4()),
+                    'sysadmin': user_data['sysadmin']}
+            user = user_create(context={'ignore_auth': True}, data_dict=user)
+            # user = plugins.toolkit.get_action('user_create')({'ignore_auth': True}, user)
+
+
     def index(self):
         extra_vars = {}
 
@@ -96,21 +114,42 @@ class OICLoginController(plugins.toolkit.BaseController):
             password = data['password']
             extra_vars = {'data': data, 'errors': {}, 'username': username }
 
-            user = {'email': 'oudy2nd@gmail.com',
+            user_data = {'email': 'oudy2nd@gmail.com',
                     'name': username,
-                    'password': 'ThisisPassword',
                     'sysadmin': True}
 
+            users = toolkit.get_action('user_list')(data_dict=dict(q=username), context={'ignore_auth': True})
+            user_create = toolkit.get_action('user_create')
 
-            session['oic-user'] = user
+            if len(users) == 1:
+                user = users[0]
+            elif len(users) == 0:
+                user = {'email': user_data['email'],
+                        'name': user_data['name'],
+                        'password': str(uuid.uuid4()),
+                        'sysadmin': user_data['sysadmin']}
+                user = user_create(context={'ignore_auth': True}, data_dict=user)
+            else:
+                raise Exception("Found invalid number of users with this username {}".format(username))
+
+            session['oic-user'] = user['name']
             session.save()
 
-            return toolkit.redirect_to('user.logged_in')
+            return toolkit.redirect_to(controller='user', action='dashboard')
+            # return toolkit.redirect_to('user.logged_in')
 
         elif 'username' in data:
-            extra_vars = {'data': data, 'errors': {}, 'username': data['username']}
+            extra_vars = {'data': data, 'errors': 'username or password invalid', 'username': data['username']}
 
         else:
             extra_vars = {'data': {}, 'errors': {}, 'username': ''}
 
         return base.render('user/oiclogin3.html', extra_vars=extra_vars)
+
+    #                     return toolkit.redirect_to(controller='home', action='index')
+    # else:
+    #     raise Exception("Found invalid number of users with this AAF ID {}".format(user_unique_id))
+
+    # session['aaf-user'] = user['id']
+    # session.save()
+    # return toolkit.redirect_to(controller='user', action='dashboard')

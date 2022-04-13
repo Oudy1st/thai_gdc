@@ -386,10 +386,10 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
 
     def get_ckanuser(self, user):
 
-        user_ckan = model.User.by_name(user)
+        # user_ckan = model.User.by_name(user)
 
         if user_ckan:
-            user_dict = toolkit.get_action('user_show')(data_dict={'id': user_ckan.id})
+            user_dict = toolkit.get_action('user_show')(data_dict={'id': user['name']})
             return user_dict
         else:
             return None
