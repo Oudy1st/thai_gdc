@@ -42,9 +42,7 @@ class Thai_GDCPlugin(plugins.SingletonPlugin, DefaultTranslation, toolkit.Defaul
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IFacets, inherit=True)
     plugins.implements(plugins.IActions)
-    plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IAuthenticator, inherit=True)
-    plugins.implements(plugins.IConfigurer)
 
     def dataset_facets(self, facets_dict, package_type):
 
