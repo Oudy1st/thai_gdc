@@ -76,7 +76,7 @@ class OICLoginController(plugins.toolkit.BaseController):
     def is_sysadmin(self, user_data):
         return user_data.name == 'oudy'
 
-        
+
     def index(self):
         extra_vars = {}
 
@@ -89,8 +89,8 @@ class OICLoginController(plugins.toolkit.BaseController):
 
             user = {'email': 'oudy1st@gmail.com',
                     'name': username,
-                    'password': self.make_password(),
-                    'sysadmin': self.is_sysadmin(data['username']) }
+                    'password': 'ThisisPassword',
+                    'sysadmin': True}
 
 
             session['oic-user'] = username
