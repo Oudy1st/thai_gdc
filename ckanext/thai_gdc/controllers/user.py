@@ -137,7 +137,8 @@ class OICLoginController(plugins.toolkit.BaseController):
 
             if login_data != None:
                 user_data = {'email': username,
-                        'name': login_data['employeeName'],
+                        'name': login_data['employeeCode'],
+                        'fullname': login_data['employeeName'],
                         'owner_org' : login_data['departmentName'],
                         'sysadmin': False}
 
