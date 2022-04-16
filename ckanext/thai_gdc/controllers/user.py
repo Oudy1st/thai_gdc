@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from pickle import NONE
 import ckan.plugins as plugins
 import ckan.lib.helpers as helpers
 import ckan.logic as logic
@@ -16,7 +17,8 @@ from ckan.plugins import toolkit
 import uuid
 import hashlib
 import re
-
+import requests
+import json
 
 
 from ckan.plugins.toolkit import (
@@ -86,6 +88,40 @@ class OICLoginController(plugins.toolkit.BaseController):
         else:
             return None
 
+    def verify_user(self, username, password):
+        url = "https://6c459b75-7f8c-4755-8fc3-62b0e7b8e996.mock.pstmn.io/oiclogin"
+        r = requests.post(url, json={"username": username, "password":password})
+    
+        if r.ok:
+            content = json.loads(r.content)
+            if content['result'] == "SUCCESS":
+                return content
+            else:
+                return None
+        else:
+            return None
+
+#             {
+#     "asgOfficeCode": "",
+#     "asgOfficeName": "",
+#     "dsgOfficeCode": "",
+#     "dsgOfficeName": "",
+#     "departmentCode": "109000",
+#     "departmentName": "ฝ่ายเทคโนโลยีสารสนเทศและการสื่อสาร",
+#     "divisionCode": "109200",
+#     "divisionName": "กลุ่มกลยุทธ์และบริหารข้อมูลด้านการประกันภัย",
+#     "employeeCode": "62-1-054",
+#     "employeeName": "นายธนานันท์   เขมวราภรณ์",
+#     "mapDeptCode": "109200",
+#     "mapDeptName": "กลุ่มกลยุทธ์และบริหารข้อมูลด้านการประกันภัย",
+#     "positionCode": "2300",
+#     "positionName": "เจ้าหน้าที่ชำนาญการ",
+#     "result": "SUCCESS",
+#     "sgOfficeCode": "100000",
+#     "sgOfficeName": "เลขาธิการ",
+#     "sectionCode": "",
+#     "sectionName": ""
+# }
 
     def index(self):
         extra_vars = {}
@@ -97,34 +133,41 @@ class OICLoginController(plugins.toolkit.BaseController):
             password = data['password']
             extra_vars = {'data': data, 'errors': {}, 'username': username }
 
-            user_data = {'email': 'oudy2nd@gmail.com',
-                    'name': username,
-                    'sysadmin': True}
+            login_data = self.verify_user(username, password)
 
-            users = toolkit.get_action('user_list')(data_dict=dict(q=username), context={'ignore_auth': True})
-            user_create = toolkit.get_action('user_create')
+            if login_data != None:
+                user_data = {'email': username,
+                        'name': login_data['employeeName'],
+                        'owner_org' : login_data['departmentName'],
+                        'sysadmin': False}
 
-            if len(users) == 1:
-                user = users[0]
-            elif len(users) == 0:
-                user = {'email': user_data['email'],
-                        'name': user_data['name'],
-                        'password': str(uuid.uuid4()),
-                        'sysadmin': user_data['sysadmin']}
-                user = user_create(context={'ignore_auth': True}, data_dict=user)
+                users = toolkit.get_action('user_list')(data_dict=dict(q=username), context={'ignore_auth': True})
+                user_create = toolkit.get_action('user_create')
+
+                if len(users) == 1:
+                    user = users[0]
+                elif len(users) == 0:
+                    user = {'email': user_data['email'],
+                            'name': user_data['name'],
+                            'password': str(uuid.uuid4()),
+                            'sysadmin': user_data['sysadmin']}
+                    user = user_create(context={'ignore_auth': True}, data_dict=user)
+                else:
+                    raise Exception("Found invalid number of users with this username {}".format(username))
+
+                session['ckanext-oic-user'] = user['name']
+                session.save()
+
+                # return toolkit.redirect_to(controller='user', action='dashboard')
+                return toolkit.redirect_to('user.logged_in')
+
             else:
-                raise Exception("Found invalid number of users with this username {}".format(username))
-
-            session['ckanext-oic-user'] = user['name']
-            session.save()
-
-            # return toolkit.redirect_to(controller='user', action='dashboard')
-            return toolkit.redirect_to('user.logged_in')
+                extra_vars = {'data': data, 'errors': {}, 'error_message': 'Invalid username or password', 'username': data['username']}
 
         elif 'username' in data:
-            extra_vars = {'data': data, 'errors': {}, 'username': data['username']}
+            extra_vars = {'data': data, 'errors': {}, 'error_message':'', 'username': data['username']}
 
         else:
-            extra_vars = {'data': {}, 'errors': {}, 'username': ''}
+            extra_vars = {'data': {}, 'errors': {}, 'error_message': '', 'username': ''}
 
         return base.render('user/oiclogin3.html', extra_vars=extra_vars)
