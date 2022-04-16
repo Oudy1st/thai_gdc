@@ -136,11 +136,6 @@ class OICLoginController(plugins.toolkit.BaseController):
             login_data = self.verify_user(username, password)
 
             if login_data != None:
-                user_data = {'email': username,
-                        'name': login_data['employeeCode'],
-                        'fullname': login_data['employeeName'],
-                        'owner_org' : login_data['departmentName'],
-                        'sysadmin': False}
 
                 users = toolkit.get_action('user_list')(data_dict=dict(q=username), context={'ignore_auth': True})
                 user_create = toolkit.get_action('user_create')
@@ -148,10 +143,11 @@ class OICLoginController(plugins.toolkit.BaseController):
                 if len(users) == 1:
                     user = users[0]
                 elif len(users) == 0:
-                    user = {'email': user_data['email'],
-                            'name': user_data['name'],
+                    user = {'email': username,
+                            'name': username,
+                            'fullname': login_data['employeeName'],
                             'password': str(uuid.uuid4()),
-                            'sysadmin': user_data['sysadmin']}
+                            'sysadmin': False}
                     user = user_create(context={'ignore_auth': True}, data_dict=user)
                 else:
                     raise Exception("Found invalid number of users with this username {}".format(username))
