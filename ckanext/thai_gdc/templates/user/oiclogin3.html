@@ -1,23 +1,23 @@
 {% extends "page.html" %}
 
 {% block primary_content %}
-<div>
-  Please log in with your OIC account
-</div>
+<fieldset>
+  <legend>Please log in with your OIC account</legend>
+</fieldset>
+
 <form id="oic-login-form" action="" method="post" enctype="multipart/form-data">
-  {% if username!='' %}
-  <span>{{username}}</span><br/>
-  {% endif %}
-  <input type="text" id="username" name="username">
-  <br/>
-  <input type="password" id="password" name="password">
-  <br/>
+  <fieldset>
+  <input class="control-medium" type="text" id="username" name="username">
+  <br/><br/>
+  <input class="control-medium" type="password" id="password" name="password">
+  <br/><br/>
   {% if error_message!='' %}
   <span>{{error_message}}</span><br/>
   {% endif %}
   <div class="form-actions">
     <button class="btn btn-primary" type="submit" name="login">เข้าสู่ระบบ</button>
   </div>
+</fieldset>
 </form>
 
 {% endblock %}

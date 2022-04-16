@@ -144,7 +144,7 @@ class OICLoginController(plugins.toolkit.BaseController):
                     user = users[0]
                 elif len(users) == 0:
                     user = {'email': username,
-                            'name': username,
+                            'name': login_data['employeeCode'],
                             'fullname': login_data['employeeName'],
                             'password': str(uuid.uuid4()),
                             'sysadmin': False}
