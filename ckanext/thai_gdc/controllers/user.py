@@ -170,7 +170,7 @@ class OICLoginController(plugins.toolkit.BaseController):
                 oic_username = login_data['employeeCode']
                 oic_fullname = login_data['employeeName']
 
-                extra_vars = {'data': data, 'errors': {}, 'error_message':oic_email & oic_username & oic_fullname, 'username': ''}
+                extra_vars = {'data': data, 'errors': {}, 'error_message':oic_email + oic_username + oic_fullname, 'username': ''}
             else:
                 extra_vars = {'data': data, 'errors': {}, 'error_message':'api fail', 'username': data['username']}
 
