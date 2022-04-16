@@ -137,9 +137,9 @@ class OICLoginController(plugins.toolkit.BaseController):
 
             if login_data != None:
                 oic_email = username
-                oic_username = login_data['employeeCode']
+                oic_username = 'oic_'+login_data['employeeCode']
                 oic_fullname = login_data['employeeName']
-                users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
+                users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
                 user_create = toolkit.get_action('user_create')
 
                 if len(users) == 1:
