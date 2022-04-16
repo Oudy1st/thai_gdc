@@ -136,16 +136,18 @@ class OICLoginController(plugins.toolkit.BaseController):
             login_data = self.verify_user(username, password)
 
             if login_data != None:
-
-                users = toolkit.get_action('user_list')(data_dict=dict(q=username), context={'ignore_auth': True})
+                oic_email = username
+                oic_username = login_data['employeeCode']
+                oic_fullname = login_data['employeeName']
+                users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
                 user_create = toolkit.get_action('user_create')
 
                 if len(users) == 1:
                     user = users[0]
                 elif len(users) == 0:
-                    user = {'email': username,
-                            'name': login_data['employeeCode'],
-                            'fullname': login_data['employeeName'],
+                    user = {'email': oic_email,
+                            'name': oic_username,
+                            'fullname': oic_fullname,
                             'password': str(uuid.uuid4()),
                             'sysadmin': False}
                     user = user_create(context={'ignore_auth': True}, data_dict=user)
@@ -164,7 +166,11 @@ class OICLoginController(plugins.toolkit.BaseController):
         elif 'username' in data:
             login_data = self.verify_user('username', 'password')
             if login_data != None:
-                extra_vars = {'data': data, 'errors': {}, 'error_message':'', 'username': login_data['employeeName']}
+                oic_email = data['username']
+                oic_username = login_data['employeeCode']
+                oic_fullname = login_data['employeeName']
+
+                extra_vars = {'data': data, 'errors': {}, 'error_message':oic_email & oic_username & oic_fullname, 'username': ''}
             else:
                 extra_vars = {'data': data, 'errors': {}, 'error_message':'api fail', 'username': data['username']}
 

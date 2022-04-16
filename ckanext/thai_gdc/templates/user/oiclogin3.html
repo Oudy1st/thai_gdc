@@ -2,13 +2,16 @@
 
 {% block primary_content %}
 <fieldset>
+  <br/>
   <legend>Please log in with your OIC account</legend>
 </fieldset>
 
 <form id="oic-login-form" action="" method="post" enctype="multipart/form-data">
   <fieldset>
+  <span class="text">username</span><br/>
   <input class="control-medium" type="text" id="username" name="username">
-  <br/><br/>
+  <br/>
+  <span class="text">password</span><br/>
   <input class="control-medium" type="password" id="password" name="password">
   <br/><br/>
   {% if error_message!='' %}
