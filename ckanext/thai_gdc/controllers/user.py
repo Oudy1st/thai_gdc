@@ -165,7 +165,11 @@ class OICLoginController(plugins.toolkit.BaseController):
                 extra_vars = {'data': data, 'errors': {}, 'error_message': 'Invalid username or password', 'username': data['username']}
 
         elif 'username' in data:
-            extra_vars = {'data': data, 'errors': {}, 'error_message':'', 'username': data['username']}
+            login_data = self.verify_user('username', 'password')
+            if login_data != None:
+                extra_vars = {'data': data, 'errors': {}, 'error_message':'', 'username': login_data['employeeName']}
+            else:
+                extra_vars = {'data': data, 'errors': {}, 'error_message':'api fail', 'username': data['username']}
 
         else:
             extra_vars = {'data': {}, 'errors': {}, 'error_message': '', 'username': ''}
