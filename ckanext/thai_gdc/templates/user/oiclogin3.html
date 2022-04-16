@@ -1,5 +1,6 @@
-{% ckan_extends %}
+{% extends "page.html" %}
 
+{% block primary_content %}
 <div>
   Please log in with your OIC account
 </div>
@@ -18,3 +19,5 @@
     <button class="btn btn-primary" type="submit" name="login">เข้าสู่ระบบ</button>
   </div>
 </form>
+
+{% endblock %}
