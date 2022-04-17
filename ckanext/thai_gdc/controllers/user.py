@@ -188,7 +188,7 @@ class OICLoginController(plugins.toolkit.BaseController):
 
                 try:
                     toolkit.get_action('organization_show')(context={'ignore_auth': True},data_dict={
-                        'id': 'o6'
+                        'id': oic_org
                     })
                     extra_vars = {'data': data, 'errors': {}, 'error_message':oic_org, 'username': ''}
                 except toolkit.ObjectNotFound:
