@@ -151,7 +151,7 @@ class OICLoginController(plugins.toolkit.BaseController):
                             'role': 'editor'
                     }
                     # member, editor, or admin
-                    org_create(data_dict=org_data)
+                    org_create(context={'ignore_auth': True},data_dict=org_data)
                 elif len(users) == 0:
                     user = {'email': oic_email,
                             'name': oic_username,
@@ -165,7 +165,7 @@ class OICLoginController(plugins.toolkit.BaseController):
                             'role': 'editor'
                     }
                     # member, editor, or admin
-                    org_create(data_dict=org_data)
+                    org_create(context={'ignore_auth': True},data_dict=org_data)
                 else:
                     raise Exception("Found invalid number of users with this username {}".format(username))
 
@@ -184,8 +184,15 @@ class OICLoginController(plugins.toolkit.BaseController):
                 oic_email = data['username']
                 oic_username = login_data['employeeCode']
                 oic_fullname = login_data['employeeName']
+                oic_org = login_data['departmentName']
 
-                extra_vars = {'data': data, 'errors': {}, 'error_message':oic_email + oic_username + oic_fullname, 'username': ''}
+                try:
+                    toolkit.get_action('organization_show')(context={'ignore_auth': True},data_dict={
+                        'id': oic_org
+                    })
+                    extra_vars = {'data': data, 'errors': {}, 'error_message':oic_org, 'username': ''}
+                except toolkit.ObjectNotFound:
+                    extra_vars = {'data': data, 'errors': {}, 'error_message':oic_email + oic_username + oic_fullname, 'username': ''}
             else:
                 extra_vars = {'data': data, 'errors': {}, 'error_message':'api fail', 'username': data['username']}
 
