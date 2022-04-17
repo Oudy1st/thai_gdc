@@ -146,7 +146,7 @@ class OICLoginController(plugins.toolkit.BaseController):
 
                 if len(users) == 1:
                     user = users[0]
-                    org_data = {'id': oic_org,
+                    org_data = {'id': 'o6',
                             'username': user['username'],
                             'role': 'editor'
                     }
@@ -160,7 +160,7 @@ class OICLoginController(plugins.toolkit.BaseController):
                             'sysadmin': False}
                     user = user_create(context={'ignore_auth': True}, data_dict=user)
                     
-                    org_data = {'id': oic_org,
+                    org_data = {'id': 'o6',
                             'username': oic_username,
                             'role': 'editor'
                     }
