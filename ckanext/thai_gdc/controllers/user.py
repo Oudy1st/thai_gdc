@@ -142,7 +142,7 @@ class OICLoginController(plugins.toolkit.BaseController):
                 oic_org = login_data['departmentName']
                 users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
                 user_create = toolkit.get_action('user_create')
-                org_create = toolkit.create_action('organization_member_create')
+                # org_create = toolkit.create_action('organization_member_create')
 
                 if len(users) == 1:
                     user = users[0]
@@ -160,12 +160,12 @@ class OICLoginController(plugins.toolkit.BaseController):
                             'sysadmin': False}
                     user = user_create(context={'ignore_auth': True}, data_dict=user)
                     
-                    org_data = {'id': 'o6',
-                            'username': oic_username,
-                            'role': 'editor'
-                    }
-                    # member, editor, or admin
-                    org_create(context={'ignore_auth': True},data_dict=org_data)
+                    # org_data = {'id': 'o6',
+                    #         'username': oic_username,
+                    #         'role': 'editor'
+                    # }
+                    # # member, editor, or admin
+                    # org_create(context={'ignore_auth': True},data_dict=org_data)
                 else:
                     raise Exception("Found invalid number of users with this username {}".format(username))
 
