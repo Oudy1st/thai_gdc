@@ -77,7 +77,7 @@ class OICLoginController(plugins.toolkit.BaseController):
         
     def is_sysadmin(self, user_data):
         admin_emp_codes = toolkit.config['ckanext.oiclogin.admin_emp_codes']
-        if user_data.employeeCode in admin_emp_codes:
+        if user_data['employeeCode'] in admin_emp_codes:
             return True
         else:
             return False
@@ -163,7 +163,6 @@ class OICLoginController(plugins.toolkit.BaseController):
                 oic_sysadmin = self.is_sysadmin(login_data)
                 users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
                 user_create = toolkit.get_action('user_create')
-                # org_create = toolkit.get_action('organization_member_create')
 
                 if len(users) == 1:
                     user = users[0]
@@ -200,13 +199,20 @@ class OICLoginController(plugins.toolkit.BaseController):
                     if data['username'] == 'testuser':
                         login_data['employeeCode'] = '62-1-050'
 
-                    if data['username'] == 'testget1':
-                        users = toolkit.get_action('user_list')(data_dict=dict(email='test4@oic.or.th'), context={'ignore_auth': True})
-                        extra_vars = {'data': data, 'errors': {}, 'error_message':'find-' + len(users), 'username': ''}
+                    if data['username'] == 'testuser1':
+                        users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
+                        if len(users) > 0:
+                            extra_vars = {'data': data, 'errors': {}, 'error_message':'find email', 'username': ''}
+                        else:
+                            extra_vars = {'data': data, 'errors': {}, 'error_message':'not find email', 'username': ''}
                         
-                    elif data['username'] == 'testget2':
+                    elif data['username'] == 'testuser2':
                         users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
-                        extra_vars = {'data': data, 'errors': {}, 'error_message':'find-' + len(users), 'username': ''}
+                        if len(users) > 0:
+                            extra_vars = {'data': data, 'errors': {}, 'error_message':'find id', 'username': ''}
+                        else:
+                            extra_vars = {'data': data, 'errors': {}, 'error_message':'not find id', 'username': ''}
+                            
                     elif login_data['employeeCode'] in admin_emp_codes:
                         users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
                         extra_vars = {'data': data, 'errors': {}, 'error_message':'admin-' + oic_email, 'username': ''}
