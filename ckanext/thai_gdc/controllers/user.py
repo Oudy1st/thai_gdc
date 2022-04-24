@@ -151,12 +151,12 @@ class OICLoginController(plugins.toolkit.BaseController):
             login_data = self.verify_user(username, password)
             
             # for debig 
-            if username == "testadmin":
-                login_data['employeeCode'] = "62-1-055"
+            if username == "testuser":
+                login_data['employeeCode'] = "62-1-050"
 
 
             if login_data != None:
-                oic_email = username + mail_suffix
+                oic_email = self.map_oicemail(data['username'])
                 oic_username = 'oic_'+login_data['employeeCode']
                 oic_fullname = login_data['employeeName']
                 oic_org = login_data['departmentName']
