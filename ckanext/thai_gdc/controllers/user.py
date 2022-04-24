@@ -82,6 +82,11 @@ class OICLoginController(plugins.toolkit.BaseController):
         else:
             return False
 
+    def map_oicemail(self, prefix):
+        #get config 
+        mail_suffix = toolkit.config['ckanext.oiclogin.mail_suffix']
+        return prefix + mail_suffix
+
     def get_ckanuser(self, user):
 
         user_ckan = model.User.by_name(user)
@@ -137,8 +142,6 @@ class OICLoginController(plugins.toolkit.BaseController):
 
         if 'username' in data and 'password' in data and data['password']!='':
 
-            #get config 
-            mail_suffix = toolkit.config['ckanext.oiclogin.mail_suffix']
 
 
             username = data['username']
@@ -186,18 +189,23 @@ class OICLoginController(plugins.toolkit.BaseController):
         elif 'username' in data:
             login_data = self.verify_user('username', 'password')
             if login_data != None:
-                oic_email = data['username']
+                oic_email = self.map_oicemail(data['username'])
                 oic_username = login_data['employeeCode']
                 oic_fullname = login_data['employeeName']
                 oic_org = login_data['departmentName']
+                
+                admin_emp_codes = toolkit.config['ckanext.oiclogin.admin_emp_codes']
 
                 try:
-                    toolkit.get_action('organization_show')(context={'ignore_auth': True},data_dict={
-                        'id': oic_org
-                    })
-                    extra_vars = {'data': data, 'errors': {}, 'error_message':oic_org, 'username': ''}
+                    if data['username'] == 'testuser':
+                        login_data['employeeCode'] = '62-1-050'
+                    if login_data['employeeCode'] in admin_emp_codes:
+                        extra_vars = {'data': data, 'errors': {}, 'error_message':'admin' + login_data['employeeCode'], 'username': ''}
+                    else:
+                        extra_vars = {'data': data, 'errors': {}, 'error_message':'user' + login_data['employeeCode'], 'username': ''}
+                        
                 except toolkit.ObjectNotFound:
-                    extra_vars = {'data': data, 'errors': {}, 'error_message':oic_email + oic_username + oic_fullname, 'username': ''}
+                    extra_vars = {'data': data, 'errors': {}, 'error_message':oic_email + admin_emp_codes, 'username': ''}
             else:
                 extra_vars = {'data': data, 'errors': {}, 'error_message':'api fail', 'username': data['username']}
 
