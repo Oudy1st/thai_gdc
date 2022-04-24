@@ -190,7 +190,7 @@ class OICLoginController(plugins.toolkit.BaseController):
             login_data = self.verify_user('username', 'password')
             if login_data != None:
                 oic_email = self.map_oicemail(data['username'])
-                oic_username = login_data['employeeCode']
+                oic_username = 'oic_'+login_data['employeeCode']
                 oic_fullname = login_data['employeeName']
                 oic_org = login_data['departmentName']
                 
@@ -199,7 +199,16 @@ class OICLoginController(plugins.toolkit.BaseController):
                 try:
                     if data['username'] == 'testuser':
                         login_data['employeeCode'] = '62-1-050'
-                    if login_data['employeeCode'] in admin_emp_codes:
+
+                    if data['username'] == 'testget1':
+                        users = toolkit.get_action('user_list')(data_dict=dict(email='test4@oic.or.th'), context={'ignore_auth': True})
+                        extra_vars = {'data': data, 'errors': {}, 'error_message':'find-' + len(users), 'username': ''}
+                        
+                    elif data['username'] == 'testget2':
+                        users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
+                        extra_vars = {'data': data, 'errors': {}, 'error_message':'find-' + len(users), 'username': ''}
+                    elif login_data['employeeCode'] in admin_emp_codes:
+                        users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
                         extra_vars = {'data': data, 'errors': {}, 'error_message':'admin-' + oic_email, 'username': ''}
                     else:
                         extra_vars = {'data': data, 'errors': {}, 'error_message':'user-' + oic_email, 'username': ''}
