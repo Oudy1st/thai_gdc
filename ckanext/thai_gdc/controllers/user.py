@@ -148,8 +148,8 @@ class OICLoginController(plugins.toolkit.BaseController):
             login_data = self.verify_user(username, password)
             
             # for debug 
-            if 'usertest' in username:
-                login_data['employeeCode'] = "62-1-" + username
+            # if 'usertest' in username:
+            #     login_data['employeeCode'] = "62-1-" + username
 
 
             if login_data != None:
