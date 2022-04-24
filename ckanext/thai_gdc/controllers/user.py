@@ -191,6 +191,8 @@ class OICLoginController(plugins.toolkit.BaseController):
                 
                 if data['username'] == 'testuser' or data['username'] == 'testuser2':
                     login_data['employeeCode'] = '62-1-050'
+                if data['username'] == 'testuser3':
+                    login_data['employeeCode'] = '62-1-055'
 
                 oic_email = self.map_oicemail(data['username'])
                 oic_username = 'oic_'+login_data['employeeCode']
@@ -212,7 +214,7 @@ class OICLoginController(plugins.toolkit.BaseController):
                                     'name': oic_username,
                                     'fullname': oic_fullname,
                                     'password': str(uuid.uuid4()),
-                                    'sysadmin': True
+                                    'sysadmin': False
                                     }
                             user = user_create(context={'ignore_auth': True}, data_dict=user)   
                             extra_vars = {'data': data, 'errors': {}, 'error_message':'not find email', 'username': ''}
@@ -225,6 +227,21 @@ class OICLoginController(plugins.toolkit.BaseController):
                             user = {
                                     'id': 1,
                                     'email': 'testuser1@test.com',
+                                    'name': oic_username,
+                                    'fullname': oic_fullname,
+                                    'password': str(uuid.uuid4()),
+                                    'sysadmin': oic_sysadmin
+                                    }
+                            user = user_create(context={'ignore_auth': True}, data_dict=user)   
+                            extra_vars = {'data': data, 'errors': {}, 'error_message':'not find id', 'username': ''}
+                    elif data['username'] == 'testuser3':
+                        users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
+                        if len(users) > 0:
+                            extra_vars = {'data': data, 'errors': {}, 'error_message':'find id', 'username': ''}
+                        else:
+                            user = {
+                                    'id': 3,
+                                    'email': 'testuser3@oic.or.th',
                                     'name': oic_username,
                                     'fullname': oic_fullname,
                                     'password': str(uuid.uuid4()),
