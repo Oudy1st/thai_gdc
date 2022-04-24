@@ -76,7 +76,11 @@ class OICLoginController(plugins.toolkit.BaseController):
         return out
         
     def is_sysadmin(self, user_data):
-        return user_data.name == 'oudy'
+        admin_emp_codes = toolkit.config['ckanext.oiclogin.admin_emp_codes']
+        if user_data.employeeCode in admin_emp_codes:
+            return True
+        else:
+            return False
 
     def get_ckanuser(self, user):
 
@@ -89,7 +93,10 @@ class OICLoginController(plugins.toolkit.BaseController):
             return None
 
     def verify_user(self, username, password):
-        url = "https://6c459b75-7f8c-4755-8fc3-62b0e7b8e996.mock.pstmn.io/oiclogin"
+        
+        url = toolkit.config['ckanext.oiclogin.url']
+
+        # url = "https://6c459b75-7f8c-4755-8fc3-62b0e7b8e996.mock.pstmn.io/oiclogin"
         r = requests.post(url, json={"username": username, "password":password})
     
         if r.ok:
@@ -129,43 +136,41 @@ class OICLoginController(plugins.toolkit.BaseController):
         data = request.POST
 
         if 'username' in data and 'password' in data and data['password']!='':
+
+            #get config 
+            mail_suffix = toolkit.config['ckanext.oiclogin.mail_suffix']
+
+
             username = data['username']
             password = data['password']
             extra_vars = {'data': data, 'errors': {}, 'username': username }
 
             login_data = self.verify_user(username, password)
+            
+            # for debig 
+            if username == "testadmin":
+                login_data['employeeCode'] = "62-1-055"
+
 
             if login_data != None:
-                oic_email = username
+                oic_email = username + mail_suffix
                 oic_username = 'oic_'+login_data['employeeCode']
                 oic_fullname = login_data['employeeName']
                 oic_org = login_data['departmentName']
+                oic_sysadmin = self.is_sysadmin(login_data)
                 users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
                 user_create = toolkit.get_action('user_create')
-                # org_create = toolkit.create_action('organization_member_create')
+                # org_create = toolkit.get_action('organization_member_create')
 
                 if len(users) == 1:
                     user = users[0]
-                    # org_data = {'id': 'o6',
-                    #         'username': user['username'],
-                    #         'role': 'editor'
-                    # }
-                    # # member, editor, or admin
-                    # org_create(context={'ignore_auth': True},data_dict=org_data)
                 elif len(users) == 0:
                     user = {'email': oic_email,
                             'name': oic_username,
                             'fullname': oic_fullname,
                             'password': str(uuid.uuid4()),
-                            'sysadmin': False}
+                            'sysadmin': oic_sysadmin}
                     user = user_create(context={'ignore_auth': True}, data_dict=user)
-                    
-                    # org_data = {'id': 'o6',
-                    #         'username': oic_username,
-                    #         'role': 'editor'
-                    # }
-                    # # member, editor, or admin
-                    # org_create(context={'ignore_auth': True},data_dict=org_data)
                 else:
                     raise Exception("Found invalid number of users with this username {}".format(username))
 
