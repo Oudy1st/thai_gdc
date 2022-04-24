@@ -156,7 +156,7 @@ class OICLoginController(plugins.toolkit.BaseController):
             if login_data != None:
                 oic_id = login_data['employeeCode']
                 oic_email = self.map_oicemail(data['username'])
-                oic_username = 'oic-'+login_data['employeeCode']
+                oic_username = data['username']
                 oic_fullname = login_data['employeeName']
                 oic_sysadmin = self.is_sysadmin(login_data)
                 users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
