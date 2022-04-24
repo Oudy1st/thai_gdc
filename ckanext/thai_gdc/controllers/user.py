@@ -200,9 +200,9 @@ class OICLoginController(plugins.toolkit.BaseController):
                     if data['username'] == 'testuser':
                         login_data['employeeCode'] = '62-1-050'
                     if login_data['employeeCode'] in admin_emp_codes:
-                        extra_vars = {'data': data, 'errors': {}, 'error_message':'admin' + login_data['employeeCode'], 'username': ''}
+                        extra_vars = {'data': data, 'errors': {}, 'error_message':'admin-' + oic_email, 'username': ''}
                     else:
-                        extra_vars = {'data': data, 'errors': {}, 'error_message':'user' + login_data['employeeCode'], 'username': ''}
+                        extra_vars = {'data': data, 'errors': {}, 'error_message':'user-' + oic_email, 'username': ''}
                         
                 except toolkit.ObjectNotFound:
                     extra_vars = {'data': data, 'errors': {}, 'error_message':oic_email + admin_emp_codes, 'username': ''}
