@@ -82,8 +82,7 @@ class OICLoginController(plugins.toolkit.BaseController):
     def map_oicemail(self, prefix):
         #get config 
         mail_suffix = toolkit.config['ckanext.oiclogin.mail_suffix']
-        # return prefix + mail_suffix
-        return prefix+"@oic.com"
+        return prefix + mail_suffix
 
     def get_ckanuser(self, user):
 
@@ -274,6 +273,6 @@ class OICLoginController(plugins.toolkit.BaseController):
         #         extra_vars = {'data': data, 'errors': {}, 'error_message':'api fail', 'username': data['username']}
 
         else:
-            extra_vars = {'data': {}, 'errors': {}, 'error_message': 'กรุณากรอกข้อมูลเพื่อเข้าสู่ระบบ', 'username': ''}
+            extra_vars = {'data': {}, 'errors': {}, 'error_message': '', 'username': ''}
 
         return base.render('user/oiclogin3.html', extra_vars=extra_vars)
