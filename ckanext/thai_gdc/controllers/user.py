@@ -77,10 +77,7 @@ class OICLoginController(plugins.toolkit.BaseController):
         
     def is_sysadmin(self, user_data):
         admin_emp_codes = toolkit.config['ckanext.oiclogin.admin_emp_codes']
-        if user_data['employeeCode'] in admin_emp_codes:
-            return True
-        else:
-            return False
+        return user_data['employeeCode'] in admin_emp_codes
 
     def map_oicemail(self, prefix):
         #get config 
@@ -161,7 +158,8 @@ class OICLoginController(plugins.toolkit.BaseController):
                 oic_fullname = login_data['employeeName']
                 oic_org = login_data['departmentName']
                 oic_sysadmin = self.is_sysadmin(login_data)
-                users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
+                users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
+                # users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
                 user_create = toolkit.get_action('user_create')
 
                 if len(users) == 1:
@@ -213,7 +211,7 @@ class OICLoginController(plugins.toolkit.BaseController):
                         else:
                             extra_vars = {'data': data, 'errors': {}, 'error_message':'not find id', 'username': ''}
                             
-                    elif login_data['employeeCode'] in admin_emp_codes:
+                    elif self.is_sysadmin(login_data):
                         users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
                         extra_vars = {'data': data, 'errors': {}, 'error_message':'admin-' + oic_email, 'username': ''}
                     else:
