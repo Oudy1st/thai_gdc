@@ -148,7 +148,7 @@ class OICLoginController(plugins.toolkit.BaseController):
 
             login_data = self.verify_user(username, password)
             
-            # for debig 
+            # for debug 
             if username == "testuser":
                 login_data['employeeCode'] = "62-1-050"
 
@@ -156,18 +156,34 @@ class OICLoginController(plugins.toolkit.BaseController):
             if login_data != None:
                 oic_id = login_data['employeeCode']
                 oic_email = self.map_oicemail(data['username'])
-                oic_username = 'oic_'+login_data['employeeCode']
+                oic_username = 'oic-'+login_data['employeeCode']
                 oic_fullname = login_data['employeeName']
                 oic_sysadmin = self.is_sysadmin(login_data)
-                # users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
-                users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
-                user_create = toolkit.get_action('user_create')
+                users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
+                # users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
+                
 
                 if len(users) == 1:
                     user = users[0]
+                    # update the user in ckan only if ckan data is not matching drupal data
+                    update = False
+                    if oic_sysadmin != user['sysadmin']:
+                        update = True
+                        
+                    if oic_fullname != user['fullname']:
+                        update = True
+
+                    if update:
+                        user_update = toolkit.get_action('user_update')
+                        user['fullname'] = oic_fullname
+                        user['sysadmin'] = oic_sysadmin
+                        user['id'] = oic_id
+                        user = user_update({'ignore_auth': True}, user)
                 elif len(users) == 0:
+                    user_create = toolkit.get_action('user_create')
                     user = {'id': oic_id,
                             'email': oic_email,
+                            'name': oic_username,
                             'fullname': oic_fullname,
                             'password': str(uuid.uuid4()),
                             'sysadmin': oic_sysadmin}
@@ -184,80 +200,80 @@ class OICLoginController(plugins.toolkit.BaseController):
             else:
                 extra_vars = {'data': data, 'errors': {}, 'error_message': 'Invalid username or password', 'username': data['username']}
 
-        elif 'username' in data:
-            login_data = self.verify_user('username', 'password')
-            if login_data != None:
+        # elif 'username' in data:
+        #     login_data = self.verify_user('username', 'password')
+        #     if login_data != None:
                 
-                if data['username'] == 'testuser' or data['username'] == 'testuser2':
-                    login_data['employeeCode'] = '62-1-050'
-                if data['username'] == 'testuser3':
-                    login_data['employeeCode'] = '62-1-055'
+        #         if data['username'] == 'testuser' or data['username'] == 'testuser2':
+        #             login_data['employeeCode'] = '62-1-050'
+        #         if data['username'] == 'testuser3':
+        #             login_data['employeeCode'] = '62-1-055'
 
-                oic_email = self.map_oicemail(data['username'])
-                oic_username = 'oic_'+login_data['employeeCode']
-                oic_fullname = login_data['employeeName']
-                oic_org = login_data['departmentName']
-                oic_sysadmin = self.is_sysadmin(login_data)
+        #         oic_email = self.map_oicemail(data['username'])
+        #         oic_username = 'oic_'+login_data['employeeCode']
+        #         oic_fullname = login_data['employeeName']
+        #         oic_org = login_data['departmentName']
+        #         oic_sysadmin = self.is_sysadmin(login_data)
                 
-                user_create = toolkit.get_action('user_create')
-                try:
+        #         user_create = toolkit.get_action('user_create')
+        #         try:
 
-                    if data['username'] == 'testuser1':
-                        users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
-                        if len(users) > 0:
-                            extra_vars = {'data': data, 'errors': {}, 'error_message':'find email', 'username': ''}
-                        else:
-                            user = {
-                                    'id': 1,
-                                    'email': 'testuser1@test.com',
-                                    'fullname': oic_fullname,
-                                    'password': str(uuid.uuid4()),
-                                    'sysadmin': False
-                                    }
-                            user = user_create(context={'ignore_auth': True}, data_dict=user)   
-                            extra_vars = {'data': data, 'errors': {}, 'error_message':'not find email', 'username': ''}
+        #             if data['username'] == 'testuser1':
+        #                 users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
+        #                 if len(users) > 0:
+        #                     extra_vars = {'data': data, 'errors': {}, 'error_message':'find email', 'username': ''}
+        #                 else:
+        #                     user = {
+        #                             'id': 1,
+        #                             'email': 'testuser1@test.com',
+        #                             'fullname': oic_fullname,
+        #                             'password': str(uuid.uuid4()),
+        #                             'sysadmin': False
+        #                             }
+        #                     user = user_create(context={'ignore_auth': True}, data_dict=user)   
+        #                     extra_vars = {'data': data, 'errors': {}, 'error_message':'not find email', 'username': ''}
                         
-                    elif data['username'] == 'testuser2':
-                        users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
-                        if len(users) > 0:
-                            extra_vars = {'data': data, 'errors': {}, 'error_message':'find id', 'username': ''}
-                        else:
-                            user = {
-                                    'id': 2,
-                                    'email': 'testuser2@test.com',
-                                    'fullname': oic_fullname,
-                                    'password': str(uuid.uuid4()),
-                                    'sysadmin': oic_sysadmin
-                                    }
-                            user = user_create(context={'ignore_auth': True}, data_dict=user)   
-                            extra_vars = {'data': data, 'errors': {}, 'error_message':'not find id', 'username': ''}
-                    elif data['username'] == 'testuser3':
-                        users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
-                        if len(users) > 0:
-                            extra_vars = {'data': data, 'errors': {}, 'error_message':'find id', 'username': ''}
-                        else:
-                            user = {
-                                    'id': 3,
-                                    'email': 'testuser3@oic.or.th',
-                                    'fullname': oic_fullname,
-                                    'password': str(uuid.uuid4()),
-                                    'sysadmin': oic_sysadmin
-                                    }
-                            user = user_create(context={'ignore_auth': True}, data_dict=user)   
-                            extra_vars = {'data': data, 'errors': {}, 'error_message':'not find id', 'username': ''}
+        #             elif data['username'] == 'testuser2':
+        #                 users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
+        #                 if len(users) > 0:
+        #                     extra_vars = {'data': data, 'errors': {}, 'error_message':'find id', 'username': ''}
+        #                 else:
+        #                     user = {
+        #                             'id': 2,
+        #                             'email': 'testuser2@test.com',
+        #                             'fullname': oic_fullname,
+        #                             'password': str(uuid.uuid4()),
+        #                             'sysadmin': oic_sysadmin
+        #                             }
+        #                     user = user_create(context={'ignore_auth': True}, data_dict=user)   
+        #                     extra_vars = {'data': data, 'errors': {}, 'error_message':'not find id', 'username': ''}
+        #             elif data['username'] == 'testuser3':
+        #                 users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
+        #                 if len(users) > 0:
+        #                     extra_vars = {'data': data, 'errors': {}, 'error_message':'find id', 'username': ''}
+        #                 else:
+        #                     user = {
+        #                             'id': 3,
+        #                             'email': 'testuser3@oic.or.th',
+        #                             'fullname': oic_fullname,
+        #                             'password': str(uuid.uuid4()),
+        #                             'sysadmin': oic_sysadmin
+        #                             }
+        #                     user = user_create(context={'ignore_auth': True}, data_dict=user)   
+        #                     extra_vars = {'data': data, 'errors': {}, 'error_message':'not find id', 'username': ''}
                             
-                    elif self.is_sysadmin(login_data):
-                        users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
-                        extra_vars = {'data': data, 'errors': {}, 'error_message':'admin-' + oic_email, 'username': ''}
-                    else:
-                        extra_vars = {'data': data, 'errors': {}, 'error_message':'user-' + oic_email, 'username': ''}
+        #             elif self.is_sysadmin(login_data):
+        #                 users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
+        #                 extra_vars = {'data': data, 'errors': {}, 'error_message':'admin-' + oic_email, 'username': ''}
+        #             else:
+        #                 extra_vars = {'data': data, 'errors': {}, 'error_message':'user-' + oic_email, 'username': ''}
                         
-                except toolkit.ObjectNotFound:
-                    extra_vars = {'data': data, 'errors': {}, 'error_message':oic_email + admin_emp_codes, 'username': ''}
-            else:
-                extra_vars = {'data': data, 'errors': {}, 'error_message':'api fail', 'username': data['username']}
+        #         except toolkit.ObjectNotFound:
+        #             extra_vars = {'data': data, 'errors': {}, 'error_message':oic_email + admin_emp_codes, 'username': ''}
+        #     else:
+        #         extra_vars = {'data': data, 'errors': {}, 'error_message':'api fail', 'username': data['username']}
 
         else:
-            extra_vars = {'data': {}, 'errors': {}, 'error_message': '', 'username': ''}
+            extra_vars = {'data': {}, 'errors': {}, 'error_message': 'กรุณากรอกข้อมูลเพื่อเข้าสู่ระบบ', 'username': ''}
 
         return base.render('user/oiclogin3.html', extra_vars=extra_vars)
