@@ -159,8 +159,8 @@ class OICLoginController(plugins.toolkit.BaseController):
                 oic_username = 'oic_'+login_data['employeeCode']
                 oic_fullname = login_data['employeeName']
                 oic_sysadmin = self.is_sysadmin(login_data)
-                users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
-                # users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
+                # users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
+                users = toolkit.get_action('user_list')(data_dict=dict(email=oic_email), context={'ignore_auth': True})
                 user_create = toolkit.get_action('user_create')
 
                 if len(users) == 1:
@@ -168,7 +168,6 @@ class OICLoginController(plugins.toolkit.BaseController):
                 elif len(users) == 0:
                     user = {'id': oic_id,
                             'email': oic_email,
-                            'name': oic_username,
                             'fullname': oic_fullname,
                             'password': str(uuid.uuid4()),
                             'sysadmin': oic_sysadmin}
@@ -211,7 +210,6 @@ class OICLoginController(plugins.toolkit.BaseController):
                             user = {
                                     'id': 1,
                                     'email': 'testuser1@test.com',
-                                    'name': oic_username,
                                     'fullname': oic_fullname,
                                     'password': str(uuid.uuid4()),
                                     'sysadmin': False
@@ -225,9 +223,8 @@ class OICLoginController(plugins.toolkit.BaseController):
                             extra_vars = {'data': data, 'errors': {}, 'error_message':'find id', 'username': ''}
                         else:
                             user = {
-                                    'id': 1,
-                                    'email': 'testuser1@test.com',
-                                    'name': oic_username,
+                                    'id': 2,
+                                    'email': 'testuser2@test.com',
                                     'fullname': oic_fullname,
                                     'password': str(uuid.uuid4()),
                                     'sysadmin': oic_sysadmin
@@ -242,7 +239,6 @@ class OICLoginController(plugins.toolkit.BaseController):
                             user = {
                                     'id': 3,
                                     'email': 'testuser3@oic.or.th',
-                                    'name': oic_username,
                                     'fullname': oic_fullname,
                                     'password': str(uuid.uuid4()),
                                     'sysadmin': oic_sysadmin
