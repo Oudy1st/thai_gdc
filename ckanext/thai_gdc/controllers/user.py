@@ -82,7 +82,8 @@ class OICLoginController(plugins.toolkit.BaseController):
     def map_oicemail(self, prefix):
         #get config 
         mail_suffix = toolkit.config['ckanext.oiclogin.mail_suffix']
-        return prefix + mail_suffix
+        # return prefix + mail_suffix
+        return prefix+"@oic.com"
 
     def get_ckanuser(self, user):
 
