@@ -148,14 +148,14 @@ class OICLoginController(plugins.toolkit.BaseController):
             login_data = self.verify_user(username, password)
             
             # for debug 
-            if username == "testuser":
-                login_data['employeeCode'] = "62-1-050"
+            if 'usertest' in username:
+                login_data['employeeCode'] = "62-1-" + username
 
 
             if login_data != None:
                 oic_id = login_data['employeeCode']
                 oic_email = self.map_oicemail(data['username'])
-                oic_username = data['username']
+                oic_username = 'oic-'+login_data['employeeCode']
                 oic_fullname = login_data['employeeName']
                 oic_sysadmin = self.is_sysadmin(login_data)
                 users = toolkit.get_action('user_list')(data_dict=dict(q=oic_username), context={'ignore_auth': True})
@@ -273,6 +273,6 @@ class OICLoginController(plugins.toolkit.BaseController):
         #         extra_vars = {'data': data, 'errors': {}, 'error_message':'api fail', 'username': data['username']}
 
         else:
-            extra_vars = {'data': {}, 'errors': {}, 'error_message': '', 'username': ''}
+            extra_vars = {'data': {}, 'errors': {}, 'error_message': 'กรุณากรอกข้อมูลเพื่อเข้าสู่ระบบ', 'username': ''}
 
         return base.render('user/oiclogin3.html', extra_vars=extra_vars)
