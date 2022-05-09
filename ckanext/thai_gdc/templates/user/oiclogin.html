@@ -1,15 +1,23 @@
-{% import "macros/form.html" as form %}
+{% extends "page.html" %}
+
+{% block primary_content %}
 
 <form id="oic-login-form" action="" method="post" enctype="multipart/form-data">
-  {{ form.errors(error_summary) }}
-  {{ form.input("name", id="field-username", label=_("Username"), placeholder=_("username"), value=data.name, error=errors.name, classes=["control-medium"], is_required=True) }}
-  {{ form.input("password1", id="field-password", label=_("Password"), type="password", placeholder="••••••••", value=data.password1, error=errors.password1, classes=["control-medium"], is_required=True) }}
- 
-  {{ form.required_message() }}
-
+  <fieldset>
+  <legend>Please log in with your OIC account</legend>
+  <span class="text">username</span><br/>
+  <input class="control-medium" type="text" id="username" name="username">
+  <br/>
+  <span class="text">password</span><br/>
+  <input class="control-medium" type="password" id="password" name="password">
+  <br/><br/>
+  {% if error_message!='' %}
+  <span>{{error_message}}</span><br/>
+  {% endif %}
   <div class="form-actions">
-    {% block form_actions %}
-    <button class="btn btn-primary" type="submit" name="login">{{ _("Create Account") }}</button>
-    {% endblock %}
+    <button class="btn btn-primary red" type="submit" name="login">เข้าสู่ระบบ</button>
   </div>
+</fieldset>
 </form>
+
+{% endblock %}
