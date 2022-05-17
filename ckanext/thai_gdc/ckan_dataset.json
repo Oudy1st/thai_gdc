@@ -1317,7 +1317,6 @@
         "form_placeholder": "URL ที่สามารถเข้าถึงรายละเอียดของชุดข้อมูลได้",
         "display_property": "foaf:homepage",
         "display_snippet": "link.html",
-        "required": true,
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
       },
       {
@@ -1418,7 +1417,6 @@
           "label":"ข้อมูลโครงสร้างองค์กร"
           }
           ],
-        "required": true,
         "form_snippet": "data_language.html",
         "display_snippet": "multiple_choice.html",
         "validators": "scheming_multiple_choice",
@@ -1461,7 +1459,6 @@
           "label":"แพลตฟอร์มบริหารกองทุน"
           }
           ],
-        "required": true,
         "form_snippet": "data_language.html",
         "display_snippet": "multiple_choice.html",
         "validators": "scheming_multiple_choice",
