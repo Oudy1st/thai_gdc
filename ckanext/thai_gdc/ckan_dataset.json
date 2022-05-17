@@ -62,10 +62,19 @@
       {
         "field_name": "owner_org",
         "label": {
-          "en": "Organization",
-          "th": "หน่วยงาน"
+          "en": "dept owner",
+          "th": "ฝ่ายงานเจ้าของข้อมูล"
         },
         "preset": "dataset_organization",
+        "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
+      },
+      {
+        "field_name": "data_owner",
+        "label": {
+          "en": "Data Owner",
+          "th": "ชื่อเจ้าของข้อมูล"
+        },
+        "required": true,
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
       },
       {
@@ -74,11 +83,6 @@
           "en": "Contact Person",
           "th": "ชื่อผู้ติดต่อ"
         },
-        "form_placeholder": {
-          "en": "Organization name",
-          "th": "ชื่อหน่วยงานหรือกลุ่มงาน"
-        },
-        
         "required": true,
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
       },
@@ -115,7 +119,6 @@
         },
         "form_snippet": "markdown.html",
         "form_placeholder": "eg. Some useful notes about the data",
-        
         "required": true,
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
       },
@@ -1212,7 +1215,7 @@
         "field_name": "personal_data",
         "label": {
           "en": "Personal Data",
-          "th": "ข้อมูลส่วนบุคคล"
+          "th": "สถานะข้อมูลส่วนบุคคล"
         },
         "choices": [
           {
@@ -1230,6 +1233,7 @@
             }
           }
         ],
+        "required": true,
         "form_snippet": "select.html",
         "display_snippet": "select.html",
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
@@ -1243,12 +1247,12 @@
           "label":"Creative Commons Attributions"
           }, 
           {
-          "value":"Creative Commons Attribution Share- Alike",
-          "label":"Creative Commons Attribution Share- Alike"
+          "value":"Creative Commons Attribution Share-Alike",
+          "label":"Creative Commons Attribution Share-Alike"
           }, 
           {
-          "value":"Creative Commons Non-Commercial (Any)",
-          "label":"Creative Commons Non-Commercial (Any)"
+          "value":"Creative Commons Non-Commercial(Any)",
+          "label":"Creative Commons Non-Commercial(Any)"
           }, 
           {
           "value":"Open Data Common",
@@ -1313,6 +1317,7 @@
         "form_placeholder": "URL ที่สามารถเข้าถึงรายละเอียดของชุดข้อมูลได้",
         "display_property": "foaf:homepage",
         "display_snippet": "link.html",
+        "required": true,
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
       },
       {
@@ -1372,6 +1377,7 @@
             }
           }
         ],
+        "required": true,
         "form_snippet": "select.html",
         "display_snippet": "select.html",
         "form_data_type": ["ข้อมูลระเบียน","ข้อมูลสถิติ","ข้อมูลภูมิสารสนเทศเชิงพื้นที่","ข้อมูลหลากหลายประเภท","ข้อมูลหลัก","ข้อมูลอ้างอิง"]
@@ -1412,6 +1418,7 @@
           "label":"ข้อมูลโครงสร้างองค์กร"
           }
           ],
+        "required": true,
         "form_snippet": "data_language.html",
         "display_snippet": "multiple_choice.html",
         "validators": "scheming_multiple_choice",
@@ -1444,8 +1451,17 @@
           {
           "value":"แพลตฟอร์มส่งเสริมธุรกิจประกันภัย",
           "label":"แพลตฟอร์มส่งเสริมธุรกิจประกันภัย"
+          }, 
+          {
+          "value":"แพลตฟอร์มบริหารสำนักงาน",
+          "label":"แพลตฟอร์มบริหารสำนักงาน"
+          }, 
+          {
+          "value":"แพลตฟอร์มบริหารกองทุน",
+          "label":"แพลตฟอร์มบริหารกองทุน"
           }
           ],
+        "required": true,
         "form_snippet": "data_language.html",
         "display_snippet": "multiple_choice.html",
         "validators": "scheming_multiple_choice",
