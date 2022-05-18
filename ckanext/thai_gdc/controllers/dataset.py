@@ -67,6 +67,8 @@ class DatasetManageController(p.toolkit.BaseController):
 
 class DatasetImportController(p.toolkit.BaseController):
 
+    def _test(self):
+        log.info("test")
     
     def _oic_type_process(self, data_dict):
         
